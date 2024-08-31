@@ -21,11 +21,20 @@ class PlayerRegistrationRequest extends FormRequest
      */
     public function rules(): array
     {
+        $roles = [
+            "batter",
+            "bowler",
+            "wk_batter",
+            "batting_all",
+            "bowling_all",
+        ];
         return [
             'email'             => 'required|email|unique:users',
             'name'              => 'required|string|max:100',
             'nid'               => 'required|string|unique:users',
-            'phone_number'      => 'required|string|',
+            'phone_number'      => 'required|string',
+            'role'              => 'required|in:' . implode(',', $roles),
+            'address'           => 'required|string',
         ];
     }
 }

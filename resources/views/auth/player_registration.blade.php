@@ -8,9 +8,9 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Manager Registration</h2>
+        <h2 class="text-center mb-4">player Registration</h2>
 
-        <form action="{{ route('managers.reagistration') }}" method="POST" class="needs-validation" novalidate>
+        <form action="{{ route('player.reagistration') }}" method="POST" class="needs-validation" novalidate>
             @csrf
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -55,23 +55,23 @@
             </div>
 
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" id="password" class="form-control" required>
+                <label for="role" class="form-label">player Type</label>
+                <select name="role" id="role" class="form-select" required>
+                    <option value="" disabled selected>Select Role</option>
+                    @foreach($role as $key => $value)
+                        <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
+                </select>
                 <div class="invalid-feedback">
-                    Please enter a password.
+                    Please select a role.
                 </div>
             </div>
 
             <div class="mb-3">
-                <label for="role" class="form-label">Role</label>
-                <select name="role" id="role" class="form-select" required>
-                    <option value="" disabled selected>Select Role</option>
-                    <option value="t_manager">Team Manager</option>
-                    <option value="c_manager">Club Manager</option>
-                    <option value="g_authority">Ground Authority</option>
-                </select>
+                <label for="address" class="form-label">Address</label>
+                <input type="address" name="address" id="address" value="{{ old('address') }}" class="form-control" required>
                 <div class="invalid-feedback">
-                    Please select a role.
+                    Please enter a valid email address.
                 </div>
             </div>
 

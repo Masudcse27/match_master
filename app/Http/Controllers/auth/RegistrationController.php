@@ -5,6 +5,8 @@ namespace App\Http\Controllers\auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminPanelRegistrationRequest;
 use App\Http\Requests\ManagerRegistrationRequest;
+use App\Http\Requests\PlayerRegistrationRequest;
+use App\Models\PlayerInfo;
 use App\Models\User;
 use Hash;
 use Illuminate\Http\Request;
@@ -29,6 +31,18 @@ class RegistrationController extends Controller
         }
         return str_shuffle($password);
     }
+
+    public function index_player(){
+        $roles = [
+            "batter" => "Batter",
+            "bowler" => "Bowler",
+            "wk_batter" => "Wicket Keeper Batter",
+            "batting_all"=> "Batting Allrounder",
+            "bowling_all"=> "Bowling Allrounder",
+        ];
+        return view("auth.player_registration", ['role' => $roles]);
+    }
+
     public function index_manager(){
         $roles = [
             "t_manager" => "Team Manager",
@@ -36,6 +50,14 @@ class RegistrationController extends Controller
             "g_authority" => "Ground Authority"
         ];
         return view("auth.manager_registration", ['role' => $roles]);
+    }
+
+    public function index_admin_panel(){
+        $roles = [
+            "admin" => "Admin",
+            "moderator" => "Moderator",
+        ];
+        return view("auth.admin_panel_registration", ['role' => $roles]);
     }
     public function manager_register(ManagerRegistrationRequest $request){
         $user = new User();
@@ -46,30 +68,38 @@ class RegistrationController extends Controller
         $user->password = Hash::make($request->password);
         $user->role = $request->role;
         $user->save();
-        return redirect()->route('home')->with('Signup_success','Signup is successful');
+        return redirect()->route('login')->with('Signup_success','Signup is successful');
     }
 
     public function admin_panel_register(AdminPanelRegistrationRequest $request){
         $pass = $this->generateRandomPassword();
         $user = new User();
-        $user->name = $request->name;
+        $user->name = $request->name." ".$pass;
         $user->phone_number = $request->phone_number;
         $user->email = $request->email;
         $user->password = Hash::make($pass);
         $user->role = $request->role;
         $user->save();
-        return view('index', ['password' => $pass]);
+        echo $pass;
+        return redirect()->route('login')->with('Signup_success','Signup is successful');
     }
 
-    public function player_register(ManagerRegistrationRequest $request){
+    public function player_register(PlayerRegistrationRequest $request){
+        $pass = $this->generateRandomPassword();
         $user = new User();
-        $user->name = $request->name;
+        $user->name = $request->name." ".$pass;
         $user->nid = $request->nid;
         $user->phone_number = $request->phone_number;
         $user->email = $request->email;
-        $user->password = Hash::make($this->generateRandomPassword());
+        $user->password = Hash::make($pass);
         $user->role = 'player';
         $user->save();
-        return redirect()->route('home')->with('Signup_success','Signup is successful');
+
+        $playerinfo = new PlayerInfo();
+        $playerinfo->player_id = $user->id;
+        $playerinfo->player_type = $request->role;
+        $playerinfo->address = $request->address;
+        $playerinfo->save();
+        return redirect()->route('login')->with('Signup_success','Signup is successful');
     }
 }

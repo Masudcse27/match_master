@@ -8,9 +8,9 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Manager Registration</h2>
+        <h2 class="text-center mb-4">Admin Registration</h2>
 
-        <form action="{{ route('managers.reagistration') }}" method="POST" class="needs-validation" novalidate>
+        <form action="{{ route('admin_panel.reagistration') }}" method="POST" class="needs-validation" novalidate>
             @csrf
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -31,14 +31,6 @@
             </div>
 
             <div class="mb-3">
-                <label for="nid" class="form-label">NID</label>
-                <input type="text" name="nid" id="nid" value="{{ old('nid') }}" class="form-control" required>
-                <div class="invalid-feedback">
-                    Please enter your NID.
-                </div>
-            </div>
-
-            <div class="mb-3">
                 <label for="phone_number" class="form-label">Phone Number</label>
                 <input type="text" name="phone_number" id="phone_number" value="{{ old('phone_number') }}" class="form-control" required>
                 <div class="invalid-feedback">
@@ -55,20 +47,12 @@
             </div>
 
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" id="password" class="form-control" required>
-                <div class="invalid-feedback">
-                    Please enter a password.
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="role" class="form-label">Role</label>
+                <label for="role" class="form-label">player Type</label>
                 <select name="role" id="role" class="form-select" required>
                     <option value="" disabled selected>Select Role</option>
-                    <option value="t_manager">Team Manager</option>
-                    <option value="c_manager">Club Manager</option>
-                    <option value="g_authority">Ground Authority</option>
+                    @foreach($role as $key => $value)
+                        <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
                 </select>
                 <div class="invalid-feedback">
                     Please select a role.

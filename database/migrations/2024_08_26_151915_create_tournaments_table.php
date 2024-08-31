@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('manager_id')->constrained('users')->onDelete('cascade');
-            $table->boolean('is_aprove')->default(false);
             $table->integer('number_of_team')->default(0);
-            $table->integer('number_of_match')->default(0);
+            $table->string('description')->nullable(true);
+            $table->date('registration_last_date')->nullable(true);
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();
