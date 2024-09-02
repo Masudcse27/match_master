@@ -42,24 +42,13 @@ class LoginController extends Controller
 
     
     function logout() {
-        if(Auth::user()->role='player'){
-            if(Auth::user()->role== 'admin'){
-                Auth::guard('admin')->logout();
-            }
-            else if(Auth::user()->role== 'moderator'){
-                Auth::guard('moderator')->logout();
-            }
-            else if(Auth::user()->role== 't_manager'){
-                Auth::guard('t_manager')->logout();
-            }
-            else if(Auth::user()->role== 'c_manager'){
-                Auth::guard('c_manager')->logout();
-            }
-            else{
-                Auth::guard('g_authority')->logout();
-            }
-        }
-        else Auth::logout();
+        if(Auth::guard('admin')->check())Auth::guard('admin')->logout();
+        else if (Auth::guard('moderator')->check())Auth::guard('moderator')->logout();
+        else if (Auth::guard('t_manager')->check())Auth::guard('t_manager')->logout();
+        else if (Auth::guard('c_manager')->check())Auth::guard('c_manager')->logout();
+        else if (Auth::guard('g_authority')->check())Auth::guard('g_authority')->logout();
+        else Auth::logout();   
+        return redirect()->route('home')->with('message','logout');
     }
     
 }

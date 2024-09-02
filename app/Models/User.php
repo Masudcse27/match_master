@@ -47,4 +47,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function teamSquads()
+    {
+        return $this->hasOne(TeamSquads::class, 'player_id');
+    }
+
+    // Relationship to PlayerInfo
+    public function playerInfo()
+    {
+        return $this->hasOne(PlayerInfo::class, 'player_id');
+    }
 }

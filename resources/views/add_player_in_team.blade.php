@@ -22,25 +22,15 @@
         @endif
 
         <!-- Join Team Form -->
-        <form action="{{ route('team.registration') }}" method="POST">
+        <form action="{{ route('add.player.team',$id) }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label for="t_name" class="form-label">Team Name</label>
-                <input type="text" name="t_name" class="form-control" id="t_name" value="{{ old('t_name') }}" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="t_description" class="form-label">Team Description</label>
-                <textarea name="t_description" class="form-control" id="t_description" rows="3" required>{{ old('t_description') }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="t_title" class="form-label">Team Title</label>
-                <input type="text" name="t_title" class="form-control" id="t_title" value="{{ old('t_title') }}">
+                <label for="email" class="form-label">Player Email</label>
+                <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}" required>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Join Team</button>
+            <button type="submit" class="btn btn-primary">add</button>
         </form>
     </div>
 

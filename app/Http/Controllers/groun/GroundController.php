@@ -23,6 +23,8 @@ class GroundController extends Controller
       $ground->save();
       return redirect()->route('home')->with('success','ground create successful');
    }
+
+   
    public function update(GroundRequest $request, $id){
         $ground = Ground::find($id);
         if (!$ground) {
@@ -36,17 +38,20 @@ class GroundController extends Controller
         $ground->ground_location = $request->ground_location;
         $ground->cost_per_day = $request->cost_per_day;
         $ground->save();
+
+        return response()->json(['success' => true]);
    }
    public function retrive($id){
-    $ground = Ground::find($id);
-    if (!$ground) {
-        return redirect()->back()->withErrors(['error' => 'Ground not found.']);
-    }
-    if ($ground) {
-        return redirect()->route('home',['ground_data'=> $ground])->with('success','');
-    }
-    else return redirect()->back()->withErrors(['error' => 'not found']);
+        $ground = Ground::find($id);
+        if (!$ground) {
+            return redirect()->back()->withErrors(['error' => 'Ground not found.']);
+        }
+        if ($ground->authority_id != Auth::guard('g_authority')->user()->id) {
+            return redirect()->back()->withErrors(['error' => 'not othorize']);
+        }
+        return view('ground.show_ground',['ground'=> $ground])->with('success','');
    }
+
    public function destroy($id){
     $ground = Ground::find($id);
     if(Auth::guard('g_authority')->user()->id!= $ground->authority_id){

@@ -28,11 +28,12 @@ class TeamController extends Controller
             't_title'=> 'string|max:250',
         ]);
         $team = new Team();
-        $team->name = $request->name;
-        $team->description = $request->description;
+        $team->t_name = $request->t_name;
+        $team->t_description = $request->t_description;
         $team->t_title = $request->t_title;
         $team->t_manager = Auth::guard('t_manager')->user()->id;
         $team->save();
+        return redirect()->route('team.registration')->with('success','team create success');
     }
 
     /**

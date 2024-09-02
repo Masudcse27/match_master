@@ -16,4 +16,9 @@ class PlayerInfo extends Model
         "total_run",
         "total_wicket",
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'player_id');
+    }
 }

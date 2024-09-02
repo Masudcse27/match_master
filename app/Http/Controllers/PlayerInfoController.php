@@ -10,9 +10,10 @@ class PlayerInfoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($id)
     {
-        //
+        $player = PlayerInfo::with('user')->findOrFail($id);
+        return view('player_profile', ['player' => $player]);
     }
 
     /**
@@ -20,7 +21,7 @@ class PlayerInfoController extends Controller
      */
     public function create()
     {
-        //
+        return view('index');
     }
 
     /**
