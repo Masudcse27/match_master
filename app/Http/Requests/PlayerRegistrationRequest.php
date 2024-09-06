@@ -31,7 +31,7 @@ class PlayerRegistrationRequest extends FormRequest
         return [
             'email'             => 'required|email|unique:users',
             'name'              => 'required|string|max:100',
-            'nid'               => 'required|string|unique:users',
+            'nid'               => 'string|unique:users',
             'phone_number'      => 'required|string',
             'role'              => 'required|in:' . implode(',', $roles),
             'address'           => 'required|string',

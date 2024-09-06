@@ -15,4 +15,9 @@ class Team extends Model
         "t_title",
         "t_manager"
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

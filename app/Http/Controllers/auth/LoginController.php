@@ -19,21 +19,26 @@ class LoginController extends Controller
             if(Auth::user()->role != 'player'){
                 if(Auth::user()->role == 'admin'){
                     Auth::guard('admin')->attempt($data);
+                    
                 }
                 else if(Auth::user()->role == 'moderator'){
                     Auth::guard('moderator')->attempt($data);
+                    return redirect()->route('home')->with('success','login successful');
                 }
                 else if(Auth::user()->role == 't_manager'){
                     Auth::guard('t_manager')->attempt($data);
+                    return redirect()->route('home')->with('success','login successful');
                 }
                 else if(Auth::user()->role == 'c_manager'){
                     Auth::guard('c_manager')->attempt($data);
+                    return redirect()->route('home')->with('success','login successful');
                 }
                 else{
                     Auth::guard('g_authority')->attempt($data);
                     return redirect()->route('home')->with('success','login successful');
                 }
                 Auth::logout();
+                return redirect()->route('home')->with('success','login successful');
             }
             
         }

@@ -53,9 +53,18 @@ class User extends Authenticatable
         return $this->hasOne(TeamSquads::class, 'player_id');
     }
 
-    // Relationship to PlayerInfo
     public function playerInfo()
     {
         return $this->hasOne(PlayerInfo::class, 'player_id');
+    }
+
+    public function matchBattingHistories()
+    {
+        return $this->hasMany(MatchBattingHistory::class, 'player_id');
+    }
+
+    public function matchBowlingHistories()
+    {
+        return $this->hasMany(MatchBowlingHistory::class, 'player_id');
     }
 }

@@ -7,9 +7,11 @@ use App\Http\Controllers\MassageController;
 use App\Http\Controllers\MatchesController;
 use App\Http\Controllers\MatchSquadsController;
 use App\Http\Controllers\PlayerInfoController;
+use App\Http\Controllers\ScoreboardController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamSquadsController;
 use App\Http\Controllers\TournamentController;
+use App\Http\Controllers\UserFeedbackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\LoginController;
 
@@ -60,3 +62,11 @@ Route::post('/save-matches/{tournamentId}', [MatchesController::class, 'saveMatc
 Route::get('/select-players/{teamId}/{matchId}', [MatchSquadsController::class, 'showSelectPlayers'])->name('select.players');
 Route::post('/save-players/{teamId}/{matchId}', [MatchSquadsController::class, 'savePlayers'])->name('save.players');
 
+
+Route::get('/scoreboard/{matchId}', [ScoreboardController::class, 'showScoreboard'])->name('scoreboard.show');
+Route::post('/update-player-status', [ScoreboardController::class, 'updatePlayerStatus'])->name('player.updateStatus');
+Route::post('/update-bowling-status', [ScoreboardController::class, 'updateBowlingStatus'])->name('player.updateBowlingStatus');
+Route::post('/complete-ball', [ScoreboardController::class, 'completeBall'])->name('ball.complete');
+
+Route::post('/feedback', [UserFeedbackController::class,'store'])->name('user.feedback');
+Route::get('/feedback', [UserFeedbackController::class,'index'])->name('user.feedback');

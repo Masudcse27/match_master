@@ -19,4 +19,14 @@ class Matches extends Model
         "match_date",
         "start_time",
     ];
+
+    public function battingTeam()
+    {
+        return $this->belongsTo(Team::class, 'batting_team_id');
+    }
+
+    public function bowlingTeam()
+    {
+        return $this->belongsTo(Team::class, 'bowling_team_id');
+    }
 }
