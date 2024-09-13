@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminPanelRegistrationRequest;
 use App\Http\Requests\ManagerRegistrationRequest;
 use App\Http\Requests\PlayerRegistrationRequest;
+use App\Mail\PlayerRegistrationMail;
 use App\Models\PlayerInfo;
 use App\Models\User;
+use Auth;
 use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class RegistrationController extends Controller
 {
@@ -87,7 +90,7 @@ class RegistrationController extends Controller
     public function player_register(PlayerRegistrationRequest $request){
         $pass = $this->generateRandomPassword();
         $user = new User();
-        $user->name = $request->name." ".$pass;
+        $user->name = $request->name;
         $user->nid = $request->nid;
         $user->phone_number = $request->phone_number;
         $user->email = $request->email;
@@ -100,6 +103,7 @@ class RegistrationController extends Controller
         $playerinfo->player_type = $request->role;
         $playerinfo->address = $request->address;
         $playerinfo->save();
+        Mail::to($user->email)->send(new PlayerRegistrationMail("Player registration successful",$user->name,$pass,Auth::guard("t_manager")->user()->name));
         return redirect()->route('login')->with('Signup_success','Signup is successful');
     }
 }

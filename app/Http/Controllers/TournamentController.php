@@ -49,7 +49,7 @@ class TournamentController extends Controller
                 ];
             }
         }  
-        // dd($tournaments);
+        // dd($tournament_data);
         return view('show_tournament_for_join', ['tournaments'=> $tournament_data]);
     }
 

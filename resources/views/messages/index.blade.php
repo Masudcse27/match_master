@@ -75,7 +75,7 @@
 
         <div class="input-group">
             <input type="text" id="message" placeholder="Type a message...">
-            <input type="hidden" id="receiver_id" value="{{ $userId }}">
+            <input type="hidden" id="receiver_id" value="{{ $receiverId }}">
             <button id="send">Send</button>
         </div>
     </div>

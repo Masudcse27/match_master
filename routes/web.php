@@ -45,9 +45,9 @@ Route::post('/team-registration', [TeamController::class, 'create'])->name('team
 Route::get('/add-player-team/{id}', [TeamSquadsController::class,'index'])->name('add.player.team');
 Route::post('/add-player-team/{id}', [TeamSquadsController::class,'create'])->name('add.player.team');
 Route::get('/team-squads/{id}', [TeamSquadsController::class,'list'])->name('team.squads');
-Route::delete('/team_squads/{id}', [TeamSquadsController::class, 'destroy'])->name('team_squads.destroy');
+Route::delete('/team_squads/{id}', [MassageController::class, 'destroy'])->name('team_squads.destroy');
 
-
+// Route::get('/player-info/{userid}', [PlayerInfoController::class, 'index'])->name('player.info');
 Route::get('/player-profile/{id}', [PlayerInfoController::class, 'index'])->name('players.show');
 
 Route::get('/create-tournament', [TournamentController::class,'index'])->name('tournaments.store');

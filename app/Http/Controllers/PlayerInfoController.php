@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PlayerInfo;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PlayerInfoController extends Controller
@@ -10,9 +11,9 @@ class PlayerInfoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($id)
-    {
-        $player = PlayerInfo::with('user')->findOrFail($id);
+    public function index($userid){
+        $player = PlayerInfo::with('user')->where('player_id', $userid)->firstOrFail();
+        
         return view('player_profile', ['player' => $player]);
     }
 
