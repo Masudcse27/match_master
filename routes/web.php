@@ -48,7 +48,9 @@ Route::get('/team-squads/{id}', [TeamSquadsController::class,'list'])->name('tea
 Route::delete('/team_squads/{id}', [MassageController::class, 'destroy'])->name('team_squads.destroy');
 
 // Route::get('/player-info/{userid}', [PlayerInfoController::class, 'index'])->name('player.info');
-Route::get('/player-profile/{id}', [PlayerInfoController::class, 'index'])->name('players.show');
+Route::get('/player-profile', [PlayerInfoController::class, 'index'])->name('player.profile');
+Route::get('/player-profile-update', [PlayerInfoController::class, 'index'])->name('player.profile.update');
+
 
 Route::get('/create-tournament', [TournamentController::class,'index'])->name('tournaments.store');
 Route::post('/create-tournament', [TournamentController::class,'store'])->name('tournaments.store');

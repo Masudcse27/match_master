@@ -40,6 +40,9 @@ class LoginController extends Controller
                 Auth::logout();
                 return redirect()->route('home')->with('success','login successful');
             }
+            else{
+                return redirect()->route('player.profile')->with('success','login successful');
+            }
             
         }
         else return redirect()->route('login')->withInput()->with('error','Password is incorrect');
