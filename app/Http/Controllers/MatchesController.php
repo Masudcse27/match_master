@@ -48,4 +48,8 @@ class MatchesController extends Controller
         return $pairs;
     }
 
+    public function details( $match_id){
+        return view('match-details');
+    }
+
 }

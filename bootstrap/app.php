@@ -11,7 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'login' => \App\Http\Middleware\LoginMiddleware::class 
+        ]);
+        $middleware->redirectTo(
+            guests: 'login',
+            users: 'player/player-profile',
+        );
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

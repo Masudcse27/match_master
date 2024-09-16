@@ -74,6 +74,9 @@ class TeamController extends Controller
         $team->save();
     }
 
+    public function details($team_id){
+        return view('team-datails');
+    }
     /**
      * Remove the specified resource from storage.
      */

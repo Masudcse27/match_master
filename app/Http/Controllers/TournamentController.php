@@ -65,6 +65,9 @@ class TournamentController extends Controller
         $tournament = Tournament::find($id);
         return view('', ['tournament'=> $tournament]);
     }
+    public function details($tournament_id){
+        return view('tournament-details');
+    }
     public function update(Request $request, $id){
         $tournament = Tournament::find($id);
         $tournament->name = $request->name;

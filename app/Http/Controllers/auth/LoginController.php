@@ -27,7 +27,7 @@ class LoginController extends Controller
                 }
                 else if(Auth::user()->role == 't_manager'){
                     Auth::guard('t_manager')->attempt($data);
-                    return redirect()->route('home')->with('success','login successful');
+                    return redirect()->route('team.manager.profile')->with('success','login successful');
                 }
                 else if(Auth::user()->role == 'c_manager'){
                     Auth::guard('c_manager')->attempt($data);

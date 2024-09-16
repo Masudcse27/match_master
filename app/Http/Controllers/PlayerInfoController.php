@@ -37,9 +37,11 @@ class PlayerInfoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PlayerInfo $playerInfo)
+    public function show($player_id)
     {
-        //
+        $player = PlayerInfo::with('user')->where('player_id', $player_id)->firstOrFail();
+        // dd($player);
+        return view('player-info', ['player' => $player]);
     }
 
     /**

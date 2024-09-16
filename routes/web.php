@@ -9,6 +9,7 @@ use App\Http\Controllers\MatchSquadsController;
 use App\Http\Controllers\PlayerInfoController;
 use App\Http\Controllers\ScoreboardController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamManagerProfile;
 use App\Http\Controllers\TeamSquadsController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\UserFeedbackController;
@@ -17,17 +18,31 @@ use App\Http\Controllers\auth\LoginController;
 
 
 
-Route::get('/login',[LoginController::class,'index']);
-Route::post('/login',[LoginController::class,'authenticate'])->name('login');
-Route::get('/registration',[RegistrationController::class,'index_manager'])->name('managers.reagistration');
-Route::post('/registration',[RegistrationController::class,'manager_register'])->name('managers.reagistration');
-Route::get('/player-registration',[RegistrationController::class,'index_player'])->name('player.reagistration');
-Route::post('/player-registration',[RegistrationController::class,'player_register'])->name('player.reagistration');
-Route::get('/admin-panel-registration',[RegistrationController::class,'index_admin_panel'])->name('admin_panel.reagistration');
-Route::post('/admin-panel-registration',[RegistrationController::class,'admin_panel_register'])->name('admin_panel.reagistration');
+Route::group(['middleware'=>'login'],function(){
+    Route::get('/login',[LoginController::class,'index']);
+    Route::post('/login',[LoginController::class,'authenticate'])->name('login');
+    Route::get('/registration',[RegistrationController::class,'index_manager'])->name('managers.reagistration');
+    Route::post('/registration',[RegistrationController::class,'manager_register'])->name('managers.reagistration');
+    Route::get('/player-registration',[RegistrationController::class,'index_player'])->name('player.reagistration');
+    Route::post('/player-registration',[RegistrationController::class,'player_register'])->name('player.reagistration');
+    Route::get('/admin-panel-registration',[RegistrationController::class,'index_admin_panel'])->name('admin_panel.reagistration');
+    Route::post('/admin-panel-registration',[RegistrationController::class,'admin_panel_register'])->name('admin_panel.reagistration');
+});
 Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 Route::get('/',[HomeController::class,'index'])->name('home');
 
+Route::group(['prefix'=> 'player'], function () {
+    Route::group(['middleware'=>'auth'], function () {
+        Route::get('/player-profile', [PlayerInfoController::class, 'index'])->name('player.profile');
+        Route::get('/player-profile-update', [PlayerInfoController::class, 'index'])->name('player.profile.update');
+    });
+});
+
+Route::get('/team-manager-profile',[TeamManagerProfile::class,'index'])->name('team.manager.profile');
+
+Route::get('/tournament-details/{id}',[TournamentController::class,'details'])->name('tournament.details');
+Route::get('/match-details/{id}',[MatchesController::class,'details'])->name('match.details');
+Route::get('/team-details/{id}',[TeamController::class,'details'])->name('team.details');
 
 route::get('/add-ground',[GroundController::class,'index'])->name('add_ground');
 route::post('/add-ground',[GroundController::class,'create'])->name('add_ground');
@@ -47,9 +62,7 @@ Route::post('/add-player-team/{id}', [TeamSquadsController::class,'create'])->na
 Route::get('/team-squads/{id}', [TeamSquadsController::class,'list'])->name('team.squads');
 Route::delete('/team_squads/{id}', [MassageController::class, 'destroy'])->name('team_squads.destroy');
 
-// Route::get('/player-info/{userid}', [PlayerInfoController::class, 'index'])->name('player.info');
-Route::get('/player-profile', [PlayerInfoController::class, 'index'])->name('player.profile');
-Route::get('/player-profile-update', [PlayerInfoController::class, 'index'])->name('player.profile.update');
+Route::get('/player-info/{userid}', [PlayerInfoController::class, 'show'])->name('player.info');
 
 
 Route::get('/create-tournament', [TournamentController::class,'index'])->name('tournaments.store');
