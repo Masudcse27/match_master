@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\FriendlyMatch;
+use App\Models\Matches;
 use App\Models\Team;
+use App\Models\TeamSquads;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
@@ -75,7 +79,18 @@ class TeamController extends Controller
     }
 
     public function details($team_id){
-        return view('team-datails');
+        $team = Team::find($team_id);
+        $squad = TeamSquads::with('user') // Eager load the related player data
+        ->where('team_id', $team_id)
+        ->get();
+        $matches = Matches::whereDate('match_date', '>=', Carbon::today()->toDateString())
+        ->where(function($query)use($team_id){
+        $query->where('team_1', $team_id)
+        ->orwhere('team_2', $team_id);})->get();
+
+        $match_request = FriendlyMatch::where('team-2',$team_id)->with('teamOne')->get();
+        
+        return view('team-details', compact('team','squad','matches','match_request'));
     }
     /**
      * Remove the specified resource from storage.

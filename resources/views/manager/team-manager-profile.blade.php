@@ -63,29 +63,6 @@
             <!-- </div> -->
         </div>
 
-        <!-- Upcoming Matches -->
-        <div class="container mt-5">
-            <!-- <div class="section-card"> -->
-                <h4 class="section-header">Upcoming Matches for your team</h4>
-                @if(count($matches) > 0)
-                    <div class="row">
-                        @foreach($matches as $match)
-                            <div class="col-md-4">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <p class="card-text">Match Date: {{ $match['match_date'] }}</p>
-                                        <p class="card-text">Match start at: {{ $match['start_time'] }}</p>
-                                        <a href="{{ route('match.details', ['id' => $match['id']]) }}" class="btn btn-primary">View detiles</a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <p>No upcoming matches.</p>
-                @endif
-            <!-- </div> -->
-        </div>
 
         <!-- Upcoming Tournaments -->
         <div class="container mt-5">
@@ -100,7 +77,7 @@
                                     <h5 class="card-title">{{ $tournament['name'] }}</h5>
                                     <p class="card-text">Registration last date: {{ $tournament['registration_last_date'] }}</p>
                                     <p class="card-text">Tournament start: {{ $tournament['start_date'] }}</p>
-                                    <a href="{{ route('tournament.details', ['id' => $tournament['id']]) }}" class="btn btn-primary">View detiles</a>
+                                    <a href="{{ route('tournament.details', ['id' => $tournament['id']]) }}" class="btn btn-primary">View details</a>
                                 </div>
                             </div>
                         </div>

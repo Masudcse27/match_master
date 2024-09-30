@@ -11,14 +11,21 @@
 
 <div class="container mt-5">
     <h2>Select 11 Players for the Match</h2>
-
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @endif
+
+    <div id="errorAlert" class="alert alert-danger d-none alert-dismissible fade show" role="alert">
+        You must select exactly 11 players.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 
     <form action="{{ route('save.players', [$teamId, $matchId]) }}" method="POST">
         @csrf
@@ -26,7 +33,12 @@
         <div class="form-group">
             @foreach($teamSquads as $squad)
                 <div class="form-check">
-                    <input class="form-check-input player-checkbox" type="checkbox" name="players[]" value="{{ $squad->player_id }}" id="player{{ $squad->player_id }}">
+                    <input class="form-check-input player-checkbox" 
+                           type="checkbox" 
+                           name="players[]" 
+                           value="{{ $squad->player_id }}" 
+                           id="player{{ $squad->player_id }}"
+                           {{ in_array($squad->player_id, $selectedPlayers) ? 'checked' : '' }}>
                     <label class="form-check-label" for="player{{ $squad->player_id }}">
                         {{ $squad->user->name }} ({{ $squad->user->playerInfo->player_type }})
                     </label>
@@ -42,13 +54,17 @@
     $(document).ready(function() {
         $('#confirmSquadBtn').click(function(e) {
             var selectedPlayers = $('.player-checkbox:checked').length;
+
+            $('#errorAlert').addClass('d-none');
             if (selectedPlayers !== 11) {
                 e.preventDefault();
-                alert('You must select exactly 11 players.');
+                $('#errorAlert').removeClass('d-none'); 
             }
         });
     });
 </script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

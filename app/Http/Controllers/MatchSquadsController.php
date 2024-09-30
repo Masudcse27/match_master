@@ -10,28 +10,38 @@ class MatchSquadsController extends Controller
 {
     public function showSelectPlayers($teamId, $matchId)
     {
-        $teamSquads = TeamSquads::where('team_id', $teamId)->get();
-
-        return view('select_players', compact('teamSquads', 'matchId', 'teamId'));
+        $teamSquads = TeamSquads::where('team_id', $teamId)->with(['user', 'user.playerInfo'])->get();
+        $selectedPlayers = MatchSquads::where('team_id', $teamId)
+                                    ->where('match_id', $matchId)
+                                    ->pluck('player_id')
+                                    ->toArray();
+        return view('select_players', compact('teamSquads', 'selectedPlayers', 'teamId', 'matchId'));
     }
 
 
     public function savePlayers(Request $request, $teamId, $matchId)
     {
-        $selectedPlayers = $request->input('players');
+        // Validate that exactly 11 players are selected
+        // $validatedData = $request->validate([
+        //     'players' => 'required|array|size:11',  // Ensure exactly 11 players are selected
+        //     'players.*' => 'exists:players,id',     // Ensure each selected player exists in the players table
+        // ], [
+        //     'players.size' => 'You must select exactly 11 players.',
+        // ]);
 
-        if (count($selectedPlayers) != 11) {
-            return redirect()->back()->with('error', 'You must select exactly 11 players.');
-        }
+        MatchSquads::where('team_id', $teamId)
+                    ->where('match_id', $matchId)
+                    ->delete();
 
-        foreach ($selectedPlayers as $playerId) {
+        foreach ($request->players as $playerId) {
             MatchSquads::create([
-                'player_id' => $playerId,
                 'team_id' => $teamId,
                 'match_id' => $matchId,
+                'player_id' => $playerId,
             ]);
         }
 
-        return redirect()->back()->with('success', 'Match squad has been successfully saved.');
+        return redirect()->back()->with('success', 'Squad saved successfully!');
     }
+
 }

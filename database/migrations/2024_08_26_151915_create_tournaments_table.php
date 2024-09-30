@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('registration_last_date')->nullable(true);
             $table->date('start_date');
             $table->date('end_date');
+            $table->integer('entry_fee')->default(0);
             $table->timestamps();
         });
     }

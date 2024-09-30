@@ -16,10 +16,15 @@ class Tournament extends Model
         "registration_last_date",
         "start_date",
         "end_date",
+        'entry_fee'
     ];
 
     public function teams()
     {
         return $this->hasMany(TournamentTeam::class, 'tournaments_id');
+    }
+
+    public function manager()  {
+        return $this->belongsTo(User::class,'manager_id');
     }
 }

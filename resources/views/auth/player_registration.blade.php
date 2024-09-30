@@ -10,7 +10,7 @@
     <div class="container mt-5">
         <h2 class="text-center mb-4">player Registration</h2>
 
-        <form action="{{ route('player.reagistration') }}" method="POST" class="needs-validation" novalidate>
+        <form action="{{ route('player.reagistration', $team_id) }}" method="POST" class="needs-validation" novalidate>
             @csrf
             @if ($errors->any())
                 <div class="alert alert-danger">

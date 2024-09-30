@@ -17,8 +17,10 @@ return new class extends Migration
             $table->foreignId('venu_id')->nullable()->constrained('grounds')->onDelete('set null');
             $table->foreignId('team_1')->constrained('teams')->onDelete('cascade');
             $table->foreignId('team_2')->nullable()->constrained('teams')->onDelete('cascade');
-            $table->integer('total_run')->default('0')->index();
-            $table->integer('wicket')->default('0')->index();
+            $table->integer('team_1_total_run')->default('0')->index();
+            $table->integer('team_2_total_run')->default('0')->index();
+            $table->integer('team_1_wickets')->default('0')->index();
+            $table->integer('team_2_wickets')->default('0')->index();
             $table->boolean('is_end')->default(false);
             $table->date('match_date')->nullable();
             $table->time('start_time')->nullable();

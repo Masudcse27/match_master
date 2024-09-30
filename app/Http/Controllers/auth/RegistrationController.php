@@ -35,7 +35,7 @@ class RegistrationController extends Controller
         return str_shuffle($password);
     }
 
-    public function index_player(){
+    public function index_player($team_id){
         $roles = [
             "batter" => "Batter",
             "bowler" => "Bowler",
@@ -43,7 +43,7 @@ class RegistrationController extends Controller
             "batting_all"=> "Batting Allrounder",
             "bowling_all"=> "Bowling Allrounder",
         ];
-        return view("auth.player_registration", ['role' => $roles]);
+        return view("auth.player_registration", ['role' => $roles, 'team_id' => $team_id]);
     }
 
     public function index_manager(){
@@ -87,7 +87,7 @@ class RegistrationController extends Controller
         return redirect()->route('login')->with('Signup_success','Signup is successful');
     }
 
-    public function player_register(PlayerRegistrationRequest $request){
+    public function player_register(PlayerRegistrationRequest $request, $id){
         $pass = $this->generateRandomPassword();
         $user = new User();
         $user->name = $request->name;
@@ -104,6 +104,7 @@ class RegistrationController extends Controller
         $playerinfo->address = $request->address;
         $playerinfo->save();
         Mail::to($user->email)->send(new PlayerRegistrationMail("Player registration successful",$user->name,$pass,Auth::guard("t_manager")->user()->name));
-        return redirect()->route('login')->with('Signup_success','Signup is successful');
+        return redirect()->route('team.details',$id)->with('Signup_success','player registration is successful');
+        
     }
 }

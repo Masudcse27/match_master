@@ -20,7 +20,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role',['admin','moderator','t_manager','c_manager','g_authority','player'])->default('player');
-            $table->boolean('is_approved')->default(false);
+            $table->boolean('is_admin_approved')->default(false);
+            $table->integer('verification_code');
+            $table->boolean('is_email_verified')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

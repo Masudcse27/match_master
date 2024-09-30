@@ -23,11 +23,13 @@ Route::group(['middleware'=>'login'],function(){
     Route::post('/login',[LoginController::class,'authenticate'])->name('login');
     Route::get('/registration',[RegistrationController::class,'index_manager'])->name('managers.reagistration');
     Route::post('/registration',[RegistrationController::class,'manager_register'])->name('managers.reagistration');
-    Route::get('/player-registration',[RegistrationController::class,'index_player'])->name('player.reagistration');
-    Route::post('/player-registration',[RegistrationController::class,'player_register'])->name('player.reagistration');
     Route::get('/admin-panel-registration',[RegistrationController::class,'index_admin_panel'])->name('admin_panel.reagistration');
     Route::post('/admin-panel-registration',[RegistrationController::class,'admin_panel_register'])->name('admin_panel.reagistration');
 });
+
+Route::get('/player-registration/{team_id}',[RegistrationController::class,'index_player'])->name('player.reagistration');
+Route::post('/player-registration/{team_id}',[RegistrationController::class,'player_register'])->name('player.reagistration');
+
 Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 Route::get('/',[HomeController::class,'index'])->name('home');
 
@@ -42,6 +44,13 @@ Route::get('/team-manager-profile',[TeamManagerProfile::class,'index'])->name('t
 
 Route::get('/tournament-details/{id}',[TournamentController::class,'details'])->name('tournament.details');
 Route::get('/match-details/{id}',[MatchesController::class,'details'])->name('match.details');
+
+
+#team
+Route::delete('/team/{team_id}/player/{player_id}/remove', [TeamSquadsController::class, 'remove'])->name('team.squad.remove');
+Route::post('/add-player-team/{team_id}', [TeamSquadsController::class,'create'])->name('add.player.team');
+Route::get('/team-registration', [TeamController::class, 'index'])->name('team.registration');
+Route::post('/team-registration', [TeamController::class, 'create'])->name('team.registration');
 Route::get('/team-details/{id}',[TeamController::class,'details'])->name('team.details');
 
 route::get('/add-ground',[GroundController::class,'index'])->name('add_ground');
@@ -54,11 +63,9 @@ Route::get('/messages/{userId}', [MassageController::class, 'index'])->name('mes
 Route::get('/messagesfetch/{userId}', [MassageController::class, 'fetchMessages'])->name('messages.index');
 Route::post('/messages', [MassageController::class, 'store'])->name('messages.store');
 
-Route::get('/team-registration', [TeamController::class, 'index'])->name('team.registration');
-Route::post('/team-registration', [TeamController::class, 'create'])->name('team.registration');
+
 
 Route::get('/add-player-team/{id}', [TeamSquadsController::class,'index'])->name('add.player.team');
-Route::post('/add-player-team/{id}', [TeamSquadsController::class,'create'])->name('add.player.team');
 Route::get('/team-squads/{id}', [TeamSquadsController::class,'list'])->name('team.squads');
 Route::delete('/team_squads/{id}', [MassageController::class, 'destroy'])->name('team_squads.destroy');
 
@@ -85,3 +92,7 @@ Route::post('/complete-ball', [ScoreboardController::class, 'completeBall'])->na
 
 Route::post('/feedback', [UserFeedbackController::class,'store'])->name('user.feedback');
 Route::get('/feedback', [UserFeedbackController::class,'index'])->name('user.feedback');
+
+Route::post('/friendly-match-request/{id}', [MatchesController::class,'create_friendly_match'])->name('friendly.match.request');
+Route::get('/friendly-match-request-accept/{id}', [MatchesController::class,'accept_friendly_match_request'])->name('friendly.match.request.accept');
+Route::get('/friendly-match-request-reject/{id}', [MatchesController::class,'reject_friendly_match_request'])->name('friendly.match.request.reject');
