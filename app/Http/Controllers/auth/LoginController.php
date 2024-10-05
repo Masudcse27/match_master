@@ -19,26 +19,34 @@ class LoginController extends Controller
             if(Auth::user()->role != 'player'){
                 if(Auth::user()->role == 'admin'){
                     Auth::guard('admin')->attempt($data);
-                    
+                    Auth::logout();
                 }
                 else if(Auth::user()->role == 'moderator'){
                     Auth::guard('moderator')->attempt($data);
+                    Auth::logout();
                     return redirect()->route('home')->with('success','login successful');
                 }
                 else if(Auth::user()->role == 't_manager'){
                     Auth::guard('t_manager')->attempt($data);
+                    Auth::logout();
+                    if(!Auth::guard('t_manager')->user()->is_email_verified){
+                        return redirect()->route('otp.verification');
+                    }
                     return redirect()->route('team.manager.profile')->with('success','login successful');
                 }
                 else if(Auth::user()->role == 'c_manager'){
                     Auth::guard('c_manager')->attempt($data);
-                    return redirect()->route('home')->with('success','login successful');
+                    Auth::logout();
+                    if(!Auth::guard('c_manager')->user()->is_email_verified){
+                        return redirect()->route('otp.verification');
+                    }
+                    return redirect()->route('team.manager.profile')->with('success','login successful');
                 }
                 else{
                     Auth::guard('g_authority')->attempt($data);
+                    Auth::logout();
                     return redirect()->route('home')->with('success','login successful');
                 }
-                Auth::logout();
-                return redirect()->route('home')->with('success','login successful');
             }
             else{
                 return redirect()->route('player.profile')->with('success','login successful');

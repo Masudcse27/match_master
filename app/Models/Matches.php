@@ -29,4 +29,14 @@ class Matches extends Model
     {
         return $this->belongsTo(Team::class, 'bowling_team_id');
     }
+
+    public function teamOne()
+    {
+        return $this->belongsTo(Team::class, 'team_1');
+    }
+
+    public function teamTwo()
+    {
+        return $this->belongsTo(Team::class, 'team_2');
+    }
 }

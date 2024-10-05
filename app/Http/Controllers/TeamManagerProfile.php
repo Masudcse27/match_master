@@ -13,7 +13,13 @@ use Illuminate\Http\Request;
 class TeamManagerProfile extends Controller
 {
     public function index() {
-        $user_id = Auth::guard("t_manager")->user()->id;
+        $user_id = null;
+        if(Auth::guard('t_manager')->check()){
+            $user_id = Auth::guard("t_manager")->user()->id;
+        }
+        else{
+            $user_id = Auth::guard("c_manager")->user()->id;
+        }
         $teams = Team::where("t_manager", $user_id)->get();
         $manager = User::where("id", $user_id)->first();
         $teamsManaged = $teams->pluck('id');
@@ -26,6 +32,9 @@ class TeamManagerProfile extends Controller
         $tournaments = Tournament::whereDate('registration_last_date', '>=', Carbon::today()->toDateString())
                   ->where('manager_id', '!=', $user_id)->get();
 
-        return view('manager.team-manager-profile',compact('teams','manager','matches','tournaments'));
+        $my_tournaments = Tournament::whereDate('registration_last_date', '>=', Carbon::today()->toDateString())
+                  ->where('manager_id', $user_id)->get();
+
+        return view('manager.manager-profile',compact('teams','manager','matches','tournaments','my_tournaments'));
     }
 }

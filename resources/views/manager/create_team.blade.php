@@ -40,7 +40,7 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Join Team</button>
+            <button type="submit" class="btn btn-primary">Create Team</button>
         </form>
     </div>
 

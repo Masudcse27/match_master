@@ -25,6 +25,12 @@
                 <textarea name="description" id="description" class="form-control" rows="4" required>{{ old('description') }}</textarea>
             </div>
             
+            <!-- Tournament Description -->
+            <div class="form-group mb-3">
+                <label for="entry_fee">Entry Fee for Tournament</label>
+                <input type="number" name="entry_fee" id="entry_fee" value="{{ old('entry_fee') }}" class="form-control" required>
+            </div>
+
             <!-- Registration Last Date -->
             <div class="form-group mb-3">
                 <label for="registration_last_date">Registration Last Date</label>

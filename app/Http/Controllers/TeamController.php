@@ -31,13 +31,20 @@ class TeamController extends Controller
             't_description'=> 'required|string|max:250',
             't_title'=> 'string|max:250',
         ]);
+        $user_id = null;
+        if(Auth::guard('t_manager')->check()){
+            $user_id = Auth::guard("t_manager")->user()->id;
+        }
+        else{
+            $user_id = Auth::guard("c_manager")->user()->id;
+        }
         $team = new Team();
         $team->t_name = $request->t_name;
         $team->t_description = $request->t_description;
         $team->t_title = $request->t_title;
-        $team->t_manager = Auth::guard('t_manager')->user()->id;
+        $team->t_manager = $user_id;
         $team->save();
-        return redirect()->route('team.registration')->with('success','team create success');
+        return redirect()->route('team.manager.profile')->with('success','team create success');
     }
 
     /**
@@ -88,7 +95,7 @@ class TeamController extends Controller
         $query->where('team_1', $team_id)
         ->orwhere('team_2', $team_id);})->get();
 
-        $match_request = FriendlyMatch::where('team-2',$team_id)->with('teamOne')->get();
+        $match_request = FriendlyMatch::where('team_2',$team_id)->with('teamOne')->get();
         
         return view('team-details', compact('team','squad','matches','match_request'));
     }

@@ -31,7 +31,7 @@
         <!-- Manager Details -->
         <div class="row">
             <div class="section-card col-md-6 align-items-center">
-                <h4 class="section-header">Manager Details</h4>
+                <h4 class="section-header">Team Details</h4>
                 <p><strong>Name:</strong> {{ $team->t_name }}</p>
                 <p><strong>Title:</strong> {{ $team->t_title }}</p>
                 <p><strong>Description:</strong> {{ $team->t_description }}</p>

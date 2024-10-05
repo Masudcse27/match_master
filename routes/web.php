@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\auth\RegistrationController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\groun\GroundController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MassageController;
 use App\Http\Controllers\MatchesController;
+use App\Http\Controllers\MatchPredictionController;
 use App\Http\Controllers\MatchSquadsController;
 use App\Http\Controllers\PlayerInfoController;
 use App\Http\Controllers\ScoreboardController;
@@ -96,3 +98,10 @@ Route::get('/feedback', [UserFeedbackController::class,'index'])->name('user.fee
 Route::post('/friendly-match-request/{id}', [MatchesController::class,'create_friendly_match'])->name('friendly.match.request');
 Route::get('/friendly-match-request-accept/{id}', [MatchesController::class,'accept_friendly_match_request'])->name('friendly.match.request.accept');
 Route::get('/friendly-match-request-reject/{id}', [MatchesController::class,'reject_friendly_match_request'])->name('friendly.match.request.reject');
+
+Route::get('/otp-verification',[EmailVerificationController::class,'index'])->name('otp.verification');
+Route::post('/otp-verification',[EmailVerificationController::class,'verify_email'])->name('otp.verification');
+Route::get('/otp-resend',[EmailVerificationController::class,'resend_code'])->name('otp.resend');
+
+Route::get('/match-prediction/{id}',[MatchPredictionController::class,'index'])->name('match.prediction');
+Route::post('/match-prediction/{id}',[MatchPredictionController::class,'store'])->name('match.prediction');

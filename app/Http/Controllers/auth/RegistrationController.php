@@ -7,6 +7,7 @@ use App\Http\Requests\AdminPanelRegistrationRequest;
 use App\Http\Requests\ManagerRegistrationRequest;
 use App\Http\Requests\PlayerRegistrationRequest;
 use App\Mail\PlayerRegistrationMail;
+use App\Mail\EmailVerification;
 use App\Models\PlayerInfo;
 use App\Models\User;
 use Auth;
@@ -63,6 +64,7 @@ class RegistrationController extends Controller
         return view("auth.admin_panel_registration", ['role' => $roles]);
     }
     public function manager_register(ManagerRegistrationRequest $request){
+        $verification_code = mt_rand(100000, 999999);
         $user = new User();
         $user->name = $request->name;
         $user->nid = $request->nid;
@@ -70,7 +72,9 @@ class RegistrationController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->role = $request->role;
+        $user->verification_code = $verification_code;
         $user->save();
+        Mail::to($user->email)->send(new EmailVerification("Email Verification Code",$user->name,$verification_code,$user->role));
         return redirect()->route('login')->with('Signup_success','Signup is successful');
     }
 

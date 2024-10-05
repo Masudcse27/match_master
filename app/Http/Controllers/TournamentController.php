@@ -22,8 +22,9 @@ class TournamentController extends Controller
         $tournament->registration_last_date = $request->registration_last_date;
         $tournament->start_date = $request->start_date;
         $tournament->end_date = $request->end_date;
+        $tournament->entry_fee = $request->entry_fee;
         $tournament->save();
-        return redirect()->route("tournaments.store")->with("success","create successfull");
+        return redirect()->route("team.manager.profile")->with("success","create successfull");
     }
     public function list(){
         // $tournaments = Tournament::all();
