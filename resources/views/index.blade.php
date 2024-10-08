@@ -5,5 +5,7 @@
     </div>
 @endif
 
-hello
+hello <br>
+<a href="{{route('login')}}">Login</a> <br>
+<a href="{{route('managers.reagistration')}}">Registration</a>
 </div>

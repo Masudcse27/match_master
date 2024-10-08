@@ -25,7 +25,11 @@
 <body>
 
 <div class="container mt-5">
-    <h2 class="text-center dashboard-header">Team Manager Dashboard</h2>
+    @if(auth::guard('t_manager')->check())
+        <h2 class="text-center dashboard-header">Team Manager Dashboard</h2>
+    @else
+        <h2 class="text-center dashboard-header">Club Manager Dashboard</h2>
+    @endif
 
     <!-- <div class="row"> -->
         <!-- Manager Details -->

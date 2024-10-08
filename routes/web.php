@@ -21,7 +21,7 @@ use App\Http\Controllers\auth\LoginController;
 
 
 Route::group(['middleware'=>'login'],function(){
-    Route::get('/login',[LoginController::class,'index']);
+    Route::get('/login',[LoginController::class,'index'])->name('login');
     Route::post('/login',[LoginController::class,'authenticate'])->name('login');
     Route::get('/registration',[RegistrationController::class,'index_manager'])->name('managers.reagistration');
     Route::post('/registration',[RegistrationController::class,'manager_register'])->name('managers.reagistration');
@@ -45,7 +45,7 @@ Route::group(['prefix'=> 'player'], function () {
 Route::get('/team-manager-profile',[TeamManagerProfile::class,'index'])->name('team.manager.profile');
 
 Route::get('/tournament-details/{id}',[TournamentController::class,'details'])->name('tournament.details');
-Route::get('/match-details/{id}',[MatchesController::class,'details'])->name('match.details');
+Route::get('/match-details/{match_id}/{team_id}',[MatchesController::class,'details'])->name('match.details');
 
 
 #team

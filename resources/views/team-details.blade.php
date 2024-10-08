@@ -135,7 +135,7 @@
                                     <div class="card-body">
                                         <p class="card-text">Match Date: {{ $match['match_date'] }}</p>
                                         <p class="card-text">Match start at: {{ $match['start_time'] }}</p>
-                                        <a href="{{ route('match.details', ['id' => $match['id']]) }}" class="btn btn-primary">View detiles</a>
+                                        <a href="{{ route('match.details', ['match_id' => $match->id, 'team_id' => $team->id]) }}" class="btn btn-primary">View details</a>
                                     </div>
                                 </div>
                             </div>
@@ -160,8 +160,8 @@
                                         <h4>Requested team: {{ $match->teamOne->t_name }}</h4>
                                         <p class="card-text">Match Date: {{ $match['match_date'] }}</p>
                                         <p class="card-text">Match time: {{ $match['start_time'] }}</p>
-                                        <a href="{{ route('match.details', ['id' => $match['id']]) }}" class="btn btn-primary">Accept</a>
-                                        <a href="{{ route('match.details', ['id' => $match['id']]) }}" class="btn btn-primary">Reject</a>
+                                        <a href="{{ route('friendly.match.request.accept', $match->id) }}" class="btn btn-primary">Accept</a>
+                                        <a href="{{ route('friendly.match.request.reject', $match->id) }}" class="btn btn-primary">Reject</a>
                                     </div>
                                 </div>
                             </div>

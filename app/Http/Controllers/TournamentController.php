@@ -93,7 +93,7 @@ class TournamentController extends Controller
         
         $tournamentTeam->tournaments_id = $id;
         $tournamentTeam->save();
-        return redirect()->route('tournaments')->with('success','');
+        return redirect()->route('team.manager.profile')->with('success','');
     }
 
     

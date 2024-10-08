@@ -97,7 +97,7 @@ class TeamController extends Controller
 
         $match_request = FriendlyMatch::where('team_2',$team_id)->with('teamOne')->get();
         
-        return view('team-details', compact('team','squad','matches','match_request'));
+        return view('team-details', compact('team','squad','matches','match_request','team_id'));
     }
     /**
      * Remove the specified resource from storage.

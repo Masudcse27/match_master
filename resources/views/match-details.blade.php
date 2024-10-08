@@ -31,8 +31,8 @@
         <!-- Manager Details -->
         <div class="container mt-5">
             <div class="section-card">
-                <h5> {{$tournament->name}} </h5>
-                <p> {{$tournament->description}}</p>
+                
+                 <h4>Friendly match</h4>
                 <p>Match date {{$match->match_date}} at {{$match->start_time}}</p>
             </div>
             <div>

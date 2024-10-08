@@ -86,6 +86,7 @@ class RegistrationController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($pass);
         $user->role = $request->role;
+        $user->verification_code = 1;
         $user->save();
         echo $pass;
         return redirect()->route('login')->with('Signup_success','Signup is successful');
@@ -100,6 +101,7 @@ class RegistrationController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($pass);
         $user->role = 'player';
+        $user->verification_code = 1;
         $user->save();
 
         $playerinfo = new PlayerInfo();
