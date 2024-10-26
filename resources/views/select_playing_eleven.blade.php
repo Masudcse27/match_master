@@ -10,44 +10,74 @@
 <body>
 
 <div class="container mt-5">
-    <h2>Select 11 Players for the Match</h2>
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2>Select 11 Players for the Match</h2>
         </div>
-    @endif
+        <div class="card-body">
 
-    <div id="errorAlert" class="alert alert-danger d-none alert-dismissible fade show" role="alert">
-        You must select exactly 11 players.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-    <form action="{{ route('save.players', [$teamId, $matchId]) }}" method="POST">
-        @csrf
-
-        <div class="form-group">
-            @foreach($teamSquads as $squad)
-                <div class="form-check">
-                    <input class="form-check-input player-checkbox" 
-                           type="checkbox" 
-                           name="players[]" 
-                           value="{{ $squad->player_id }}" 
-                           id="player{{ $squad->player_id }}"
-                           {{ in_array($squad->player_id, $selectedPlayers) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="player{{ $squad->player_id }}">
-                        {{ $squad->user->name }} ({{ $squad->user->playerInfo->player_type }})
-                    </label>
+            <!-- Success message -->
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            @endforeach
-        </div>
+            @endif
 
-        <button type="submit" class="btn btn-primary" id="confirmSquadBtn">Confirm Squad</button>
-    </form>
+            <!-- Error message -->
+            <div id="errorAlert" class="alert alert-danger d-none alert-dismissible fade show" role="alert">
+                You must select exactly 11 players.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- Player selection form -->
+            <form action="{{ route('save.players', [$teamId, $matchId]) }}" method="POST">
+                @csrf
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Select</th>
+                                <th>Player Name</th>
+                                <th>Player Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($teamSquads as $squad)
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input player-checkbox" 
+                                                   type="checkbox" 
+                                                   name="players[]" 
+                                                   value="{{ $squad->player_id }}" 
+                                                   id="player{{ $squad->player_id }}"
+                                                   {{ in_array($squad->player_id, $selectedPlayers) ? 'checked' : '' }}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <label for="player{{ $squad->player_id }}">
+                                            {{ $squad->user->name }}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info">{{ $squad->user->playerInfo->player_type }}</span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="confirmSquadBtn">Confirm Squad</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script>

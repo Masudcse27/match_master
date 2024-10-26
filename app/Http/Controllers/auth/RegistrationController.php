@@ -109,7 +109,7 @@ class RegistrationController extends Controller
         $playerinfo->player_type = $request->role;
         $playerinfo->address = $request->address;
         $playerinfo->save();
-        Mail::to($user->email)->send(new PlayerRegistrationMail("Player registration successful",$user->name,$pass,Auth::guard("t_manager")->user()->name));
+        // Mail::to($user->email)->send(new PlayerRegistrationMail("Player registration successful",$user->name,$pass,Auth::guard("t_manager")->user()->name));
         return redirect()->route('team.details',$id)->with('Signup_success','player registration is successful');
         
     }

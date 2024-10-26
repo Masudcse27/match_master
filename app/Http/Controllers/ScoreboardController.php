@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MatchBattingBowling;
 use App\Models\MatchBattingHistory;
 use App\Models\MatchBowlingHistory;
 use App\Models\Matches;
+use App\Models\MatchSquads;
 use App\Models\Scoreboard;
 use Illuminate\Http\Request;
 use Validator;
@@ -13,64 +15,101 @@ class ScoreboardController extends Controller
 {
     public function showScoreboard($matchId)
     {
-        $match = Matches::with(['battingTeam', 'bowlingTeam'])->findOrFail($matchId);
 
-        $battingTeamSquad = $match->battingTeam->users()->get();
-        $bowlingTeamSquad = $match->bowlingTeam->users()->get();
-
+        $match = MatchBattingBowling::with(['battingTeam','bowlingTeam','matches'])->where('match_id',$matchId)->first();
+        // dd($match);
+        $battingTeamSquad = MatchSquads::with('player')->where('team_id',$match->batting_team)->where('match_id',$matchId)->get();
+        $bowlingTeamSquad = MatchSquads::with('player')->where('team_id',$match->bowling_team)->where('match_id',$matchId)->get();
         $playingBatters = MatchBattingHistory::where('match_id', $matchId)
             ->where('status', 'playing')
             ->pluck('player_id')
             ->toArray();
+        $outBatters = MatchBattingHistory::where('match_id', $matchId)
+            ->where('status', 'out')
+            ->pluck('player_id')
+            ->toArray();
 
         $currentBowler = MatchBowlingHistory::where('match_id', $matchId)
-            ->latest('updated_at')
+            ->where('is_current', true)
             ->first();
 
-        return view('scoreboard', compact('match', 'battingTeamSquad', 'bowlingTeamSquad', 'playingBatters', 'currentBowler'));
+        return view('scoreboard_manage', compact('match', 'battingTeamSquad', 'bowlingTeamSquad', 'playingBatters', 'currentBowler','outBatters'));
     }
 
    
-    public function updatePlayerStatus(Request $request)
-    {
-        
-        $validator = Validator::make($request->all(), [
-            'playerId' => 'required|exists:users,id',
-            'status' => 'required|in:playing,out,not_play',
-            'match_id' => 'required|exists:matches,id',
-        ]);
+    public function updatePlayerStatus(Request $request){
+    // dd($request);
+    $validator = Validator::make($request->all(), [
+        'playerId' => 'required|exists:users,id',
+        'status' => 'required|in:playing,out,not_play',
+        'match_id' => 'required|exists:matches,id',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
-        }
-
-        $playerId = $request->input('playerId');
-        $status = $request->input('status');
-        $matchId = $request->input('match_id');
-
-        
-        if ($status === 'playing') {
-            $currentPlaying = MatchBattingHistory::where('match_id', $matchId)
-                ->where('status', 'playing')
-                ->count();
-
-            if ($currentPlaying >= 2) {
-                return response()->json(['success' => false, 'message' => 'Only two players can be marked as "Playing" at a time.'], 400);
-            }
-        }
-
-        MatchBattingHistory::updateOrCreate(
-            [
-                'player_id' => $playerId,
-                'match_id' => $matchId,
-            ],
-            [
-                'status' => $status,
-            ]
-        );
-
-        return response()->json(['success' => true, 'message' => 'Player status updated successfully.']);
+    if ($validator->fails()) {
+        return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
     }
+
+    $playerId = $request->input('playerId');
+    $status = $request->input('status');
+    $matchId = $request->input('match_id');
+
+    // Check if the status is 'playing' and limit to 2 players
+    if ($status === 'playing') {
+        $currentPlaying = MatchBattingHistory::where('match_id', $matchId)
+            ->where('status', 'playing')
+            ->count();
+
+        if ($currentPlaying >= 2) {
+            return response()->json(['success' => false, 'message' => 'Only two players can be marked as "Playing" at a time.'], 400);
+        }
+    }
+
+    // Get the team_id from MatchBattingBowling
+    $team = MatchBattingBowling::where('match_id', $matchId)->first()->batting_team;
+
+    // Find the player in the match_batting_histories table
+    $player = MatchBattingHistory::where('player_id', $playerId)
+        ->where('match_id', $matchId)
+        ->first();
+
+    if ($player) {
+        // Update player status if found
+        
+        if($status=='out'){
+            $match = Matches::where('id',$matchId)->first();
+        
+            if($team==$match->team_1)
+                $match->team_1_wickets += 1;
+            else
+                $match->team_2_wickets +=1;
+            $match->save();
+        }
+        if($player->status=='out'&& $status!='out'){
+            $match = Matches::where('id',$matchId)->first();
+        
+            if($team==$match->team_1)
+                $match->team_1_wickets -= 1;
+            else
+                $match->team_2_wickets -=1;
+            $match->save();
+        }
+        $player->status = $status;
+        $player->save();
+    } else {
+        // Create a new entry if the player does not exist
+        $player = new MatchBattingHistory();
+        $player->player_id = $playerId;
+        $player->match_id = $matchId;
+        $player->team_id = $team;  // Assign the correct team_id
+        $player->status = $status;
+        $player->run = 0;
+        $player->ball = 0;
+        $player->save();
+    }
+
+    return response()->json(['success' => true, 'message' => 'Player status updated successfully.']);
+}
+
 
     
     public function updateBowlingStatus(Request $request)
@@ -89,19 +128,24 @@ class ScoreboardController extends Controller
         $matchId = $request->input('match_id');
 
         MatchBowlingHistory::where('match_id', $matchId)->update(['is_current' => false]);
-
-        MatchBowlingHistory::updateOrCreate(
-            [
-                'player_id' => $playerId,
-                'match_id' => $matchId,
-            ],
-            [
-                'is_current' => true,
-                'over' => 0,
-                'run' => 0,
-                'wicket' => 0,
-            ]
-        );
+        $player = MatchBowlingHistory::where('match_id',$matchId)->where('player_id',$playerId)->first();
+        
+        if($player){
+            $player->is_current = true;
+            $player->save();
+        }
+        else{
+            $team = MatchBattingBowling::where('match_id', $matchId)->first()->bowling_team;
+            $player = new MatchBowlingHistory();
+            $player->player_id = $playerId;
+            $player->match_id = $matchId;
+            $player->team_id = $team;
+            $player->over = 0;
+            $player->run = 0;
+            $player->wicket = 0;
+            $player->is_current = true;
+            $player->save();
+        }
 
         return response()->json(['success' => true, 'message' => 'Bowler status updated successfully.']);
     }
@@ -119,9 +163,9 @@ class ScoreboardController extends Controller
             'bowler_id' => 'required|exists:users,id',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        // }
 
         $matchId = $request->input('match_id');
         $teamId = $request->input('team_id');
@@ -130,71 +174,132 @@ class ScoreboardController extends Controller
         $facingPlayerId = $request->input('facing_player_id');
         $bowlerId = $request->input('bowler_id');
 
+        $batting_team = MatchBattingBowling::where('match_id', $matchId)->first()->batting_team;
+        $bowling_team = MatchBattingBowling::where('match_id', $matchId)->first()->bowling_team;
         
-        \DB::beginTransaction();
-
-        try {
-            $battingHistory = MatchBattingHistory::where('match_id', $matchId)
-                ->where('player_id', $facingPlayerId)
-                ->first();
-
-            if ($battingHistory) {
-                $battingHistory->run += $run;
-                $battingHistory->ball += 1;
-                $battingHistory->save();
-            } else {
-                
-                MatchBattingHistory::create([
-                    'player_id' => $facingPlayerId,
-                    'match_id' => $matchId,
-                    'team_id' => $teamId,
-                    'run' => $run,
-                    'ball' => 1,
-                    'status' => 'playing',
-                ]);
-            }
-
-            
-            $bowlingHistory = MatchBowlingHistory::where('match_id', $matchId)
-                ->where('player_id', $bowlerId)
-                ->first();
-
-            if ($bowlingHistory) {
-                $bowlingHistory->run += $run;
-                if (!in_array($runType, ['w', 'no'])) {
-                    $bowlingHistory->over += 1;
-                }
-                $bowlingHistory->save();
-            } else {
-                MatchBowlingHistory::create([
-                    'player_id' => $bowlerId,
-                    'match_id' => $matchId,
-                    'team_id' => $teamId,
-                    'over' => in_array($runType, ['w', 'no']) ? 0 : 1,
-                    'run' => $run,
-                    'wicket' => 0,
-                    'is_current' => true,
-                ]);
-            }
-
-            
-            $latestBallNumber = Scoreboard::where('match_id', $matchId)->max('ball_number');
-            $nextBallNumber = $latestBallNumber ? $latestBallNumber + 1 : 1;
-
-            Scoreboard::create([
-                'match_id' => $matchId,
-                'team_id' => $teamId,
-                'ball_number' => $nextBallNumber,
-                'run' => $run,
-                'run_type' => $runType,
-            ]);
-
-            \DB::commit();
-
-            return response()->json(['success' => true, 'message' => 'Ball completed successfully.']);
-        } catch (\Exception $e) {
-            \DB::rollBack();
-            return response()->json(['success' => false, 'message' => 'An error occurred while completing the ball.'], 500);
+        $battingHistory = MatchBattingHistory::where('match_id', $matchId)
+            ->where('player_id', $facingPlayerId)
+            ->first();
+        if ($battingHistory) {
+            $battingHistory->run += $run;
+            $battingHistory->ball += 1;
+            $battingHistory->save();
         }
+        else {
+            $history = new MatchBattingHistory();
+            $history->player_id = $facingPlayerId;
+            $history->match_id = $matchId;
+            $history->team_id = $batting_team;
+            $history->run = $run;
+            $history->ball = 1;
+            $history->status = 'playing';
+            $history->save();
+        }
+
+        $bowlingHistory = MatchBowlingHistory::where('match_id',$matchId)->where('player_id',$bowlerId)->first();
+        if ($bowlingHistory) {
+            $bowlingHistory->run += $run;
+            if (!in_array($runType, ['w', 'no'])) {
+                $bowlingHistory->over += 1;
+            }
+            $bowlingHistory->wicket = $runType=='rw'? $bowlingHistory->wicket+1:$bowlingHistory->wicket;
+            $bowlingHistory->save();
+        }
+        else {
+            $history = new MatchBowlingHistory();
+            $history->player_id = $bowlerId;
+            $history->match_id = $matchId;
+            $history->team_id = $bowling_team;
+            $history->run = $run;
+            $history->over = in_array($runType, ['w', 'no']) ? 0 : 1;
+            $history->is_current = true;
+            $history->wicket = $runType=='rw'? 1:0;
+            $history->save();
+        }
+        $latestBallNumber = Scoreboard::where('match_id', $matchId)
+            ->orderBy('created_at', 'desc')
+            ->first();;
+        $ballNumber = $latestBallNumber ? in_array($runType, ['w', 'no']) ? $latestBallNumber->ball_number : $latestBallNumber->ball_number+1 : 1;
+        $score = new Scoreboard();
+        $score->match_id = $matchId;
+        $score->team_id = $batting_team;
+        $score->ball_number = $ballNumber;
+        $score->run = $run;
+        $score->run_type = $runType;
+        $score->save();
+
+        $match = Matches::where('id',$matchId)->first();
+        
+        if($batting_team==$match->team_1)
+            $match->team_1_total_run =3;
+        else
+            $match->team_2_total_run +=$run;
+        $match->save();
+        return response()->json(['success' => true, 'message' => 'Ball completed successfully.']);
+
+    //     \DB::beginTransaction();
+
+    //     try {
+    //         $battingHistory = MatchBattingHistory::where('match_id', $matchId)
+    //             ->where('player_id', $facingPlayerId)
+    //             ->first();
+
+    //         if ($battingHistory) {
+    //             $battingHistory->run += $run;
+    //             $battingHistory->ball += 1;
+    //             $battingHistory->save();
+    //         } else {
+    //             MatchBattingHistory::create([
+    //                 'player_id' => $facingPlayerId,
+    //                 'match_id' => $matchId,
+    //                 'team_id' => $teamId,
+    //                 'run' => $run,
+    //                 'ball' => 1,
+    //                 'status' => 'playing',
+    //             ]);
+    //         }
+
+            
+    //         $bowlingHistory = MatchBowlingHistory::where('match_id', $matchId)
+    //             ->where('player_id', $bowlerId)
+    //             ->first();
+
+    //         if ($bowlingHistory) {
+    //             $bowlingHistory->run += $run;
+    //             if (!in_array($runType, ['w', 'no'])) {
+    //                 $bowlingHistory->over += 1;
+    //             }
+    //             $bowlingHistory->save();
+    //         } else {
+    //             MatchBowlingHistory::create([
+    //                 'player_id' => $bowlerId,
+    //                 'match_id' => $matchId,
+    //                 'team_id' => $teamId,
+    //                 'over' => in_array($runType, ['w', 'no']) ? 0 : 1,
+    //                 'run' => $run,
+    //                 'wicket' => 0,
+    //                 'is_current' => true,
+    //             ]);
+    //         }
+
+            
+    //         $latestBallNumber = Scoreboard::where('match_id', $matchId)->max('ball_number');
+    //         $nextBallNumber = $latestBallNumber ? $latestBallNumber + 1 : 1;
+
+    //         Scoreboard::create([
+    //             'match_id' => $matchId,
+    //             'team_id' => $teamId,
+    //             'ball_number' => $nextBallNumber,
+    //             'run' => $run,
+    //             'run_type' => $runType,
+    //         ]);
+
+    //         \DB::commit();
+
+    //         return response()->json(['success' => true, 'message' => 'Ball completed successfully.']);
+    //     } catch (\Exception $e) {
+    //         \DB::rollBack();
+    //         return response()->json(['success' => false, 'message' => 'An error occurred while completing the ball.'], 500);
+    //     }
     }
 }

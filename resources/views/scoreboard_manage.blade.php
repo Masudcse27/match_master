@@ -19,27 +19,30 @@
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container m-5">
+        
         <h2>Scoreboard Management</h2>
-        <h4>Match: {{ $match->name ?? 'Match ' . $match->id }}</h4>
-        <p>Date: {{ $match->date ?? 'N/A' }}</p>
+        <h4>{{$match->battingTeam->t_name}} vs {{$match->bowlingTeam->t_name}} </h4>
+        <p>Date: {{ $match->matches->match_date ?? 'N/A' }}</p>
 
         <div class="row mt-4">
            
             <div class="col-md-4">
-                <h4>Batting Team: {{ $match->battingTeam->name }}</h4>
+                <h4>Batting Team: {{ $match->battingTeam->t_name }}</h4>
                 <ul class="list-group">
                     @foreach($battingTeamSquad as $player)
                         <li class="list-group-item">
                             <div>
-                                <strong>{{ $player->name }}</strong>
+                                <strong>{{ $player->player->name }}</strong>
                                 <div class="checkbox-group mt-2">
                                     <div class="form-check">
-                                        <input class="form-check-input playing-checkbox" type="checkbox" data-player-id="{{ $player->id }}" @if(in_array($player->id, $playingBatters)) checked @endif>
+                                        <input class="form-check-input playing-checkbox" type="checkbox" data-player-id="{{ $player->player->id }}" @if(in_array($player->player->id, $playingBatters)) checked @endif>
                                         <label class="form-check-label">Playing</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input out-checkbox" type="checkbox" data-player-id="{{ $player->id }}" @if($player->matchBattingHistories->where('match_id', $match->id)->first()->status ?? '' === 'out') checked @endif>
+                                        <input class="form-check-input out-checkbox" type="checkbox" 
+                                            data-player-id="{{ $player->player->id }}" 
+                                            @if(in_array($player->player->id, $outBatters)) checked @endif>
                                         <label class="form-check-label">Out</label>
                                     </div>
                                 </div>
@@ -51,14 +54,14 @@
 
            
             <div class="col-md-4">
-                <h4>Bowling Team: {{ $match->bowlingTeam->name }}</h4>
+                <h4>Bowling Team: {{ $match->bowlingTeam->t_name }}</h4>
                 <ul class="list-group">
                     @foreach($bowlingTeamSquad as $player)
                         <li class="list-group-item">
                             <div>
-                                <strong>{{ $player->name }}</strong>
+                                <strong>{{ $player->player->name }}</strong>
                                 <div class="form-check mt-2">
-                                    <input class="form-check-input bowling-checkbox" type="checkbox" data-player-id="{{ $player->id }}" @if($currentBowler && $currentBowler->player_id === $player->id) checked @endif>
+                                    <input class="form-check-input bowling-checkbox" type="checkbox" data-player-id="{{ $player->player->id }}" @if($currentBowler && $currentBowler->player_id === $player->player->id) checked @endif>
                                     <label class="form-check-label">Bowling</label>
                                 </div>
                             </div>
@@ -94,8 +97,8 @@
                         <label for="facing-batter" class="form-label">Batter Facing the Ball:</label>
                         <select id="facing-batter" name="facing_player_id" class="form-select" required>
                             @foreach($battingTeamSquad as $player)
-                                @if(in_array($player->id, $playingBatters))
-                                    <option value="{{ $player->id }}">{{ $player->name }}</option>
+                                @if(in_array($player->player->id, $playingBatters))
+                                    <option value="{{ $player->player->id }}">{{ $player->player->name }}</option>
                                 @endif
                             @endforeach
                         </select>
@@ -122,6 +125,23 @@
                 }
             });
 
+            function updateFacingBatterDropdown() {
+                var $facingBatterDropdown = $('#facing-batter');
+                $facingBatterDropdown.empty(); // Clear current options
+
+                // Find checked playing batters and add them to the dropdown
+                $('.playing-checkbox:checked').each(function() {
+                    var playerId = $(this).data('player-id');
+                    var playerName = $(this).closest('.list-group-item').find('strong').text();
+                    $facingBatterDropdown.append(`<option value="${playerId}">${playerName}</option>`);
+                });
+
+                // Ensure there are exactly 2 players in the dropdown
+                // if ($facingBatterDropdown.children().length !== 2) {
+                //     alert('Please select exactly 2 players as "Playing".');
+                // }
+            }
+
             $('.playing-checkbox').change(function() {
                 var playerId = $(this).data('player-id');
                 var isChecked = $(this).is(':checked');
@@ -142,6 +162,8 @@
 
                 var status = isChecked ? 'playing' : 'not_play';
                 updatePlayerStatus(playerId, status);
+
+                updateFacingBatterDropdown();
             });
 
             
@@ -157,6 +179,8 @@
 
                 var status = isChecked ? 'out' : 'not_play';
                 updatePlayerStatus(playerId, status);
+
+                updateFacingBatterDropdown();
             });
 
             

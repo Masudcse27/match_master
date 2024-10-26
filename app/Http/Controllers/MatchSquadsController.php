@@ -15,7 +15,7 @@ class MatchSquadsController extends Controller
                                     ->where('match_id', $matchId)
                                     ->pluck('player_id')
                                     ->toArray();
-        return view('select_players', compact('teamSquads', 'selectedPlayers', 'teamId', 'matchId'));
+        return view('select_playing_eleven', compact('teamSquads', 'selectedPlayers', 'teamId', 'matchId'));
     }
 
 
@@ -41,7 +41,7 @@ class MatchSquadsController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Squad saved successfully!');
+        return redirect()->route('match.details', ['match_id' => $matchId, 'team_id' => $teamId])->with('success', 'Squad saved successfully!');
     }
 
 }

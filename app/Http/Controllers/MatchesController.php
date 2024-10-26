@@ -55,19 +55,19 @@ class MatchesController extends Controller
     public function details( $match_id,$team_id){
         $match = Matches::where('id', $match_id)->first();
         $tournament = Tournament::where('id', $match->tournamentId)->first();
-        $teams = Team::whereIn('id', [$match->team1, $match->team2])->get();
-        dd($teams);
-        $my_team = Team::where('id', $team_id)->first();
+        $teams = Team::whereIn('id', [$match->team_1, $match->team_2])->get();
+        // dd($teams);
+        $my_team = $teams->where('id', $team_id)->first();
         // dd($my_team);
         $opponent_team = $teams->where('id', '!=', $team_id)->first();
         // $opponent_team = Team::where('id', $opponent_team_id)->first();
-        dd($opponent_team);
+        // dd($opponent_team);
         $my_team_squads = MatchSquads::where('match_id', $match_id)
             ->where('team_id', $team_id)
             ->with(['player', 'player.playerInfo']) 
             ->get();
         $opponent_team_squads = MatchSquads::where('match_id', $match_id)
-            ->where('team_id', $opponent_team)
+            ->where('team_id', $opponent_team->id)
             ->with(['player', 'player.playerInfo'])
             ->get();
         return view('match-details', compact('match','tournament','my_team','opponent_team','my_team_squads','opponent_team_squads'));
