@@ -10,7 +10,7 @@ class MatchPredictionController extends Controller
 {
     public function index($id) {
         $matches = Matches::where('id',$id)->with(['teamOne', 'teamTwo'])->first();
-        return view('match_prediction',compact('matches'));
+        return view('match-prediction',compact('matches'));
     }
 
     public function store(Request $request, $id) {
@@ -18,6 +18,6 @@ class MatchPredictionController extends Controller
         $prediction->match_id = $id;
         $prediction->team_id = $request->team;
         $prediction->save();
-        return redirect()->route('home');
+        return redirect()->route('score', $id);
     }
 }

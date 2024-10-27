@@ -9,4 +9,8 @@ class UserFeedback extends Model
 {
     use HasFactory;
     protected $fillable = ["user_id","feedback"];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

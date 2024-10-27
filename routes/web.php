@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\auth\RegistrationController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\groun\GroundController;
@@ -94,6 +95,8 @@ Route::post('/complete-ball', [ScoreboardController::class, 'completeBall'])->na
 
 Route::post('/feedback', [UserFeedbackController::class,'store'])->name('user.feedback');
 Route::get('/feedback', [UserFeedbackController::class,'index'])->name('user.feedback');
+Route::get('/show-feedback',[UserFeedbackController::class,'list'])->name('show.feedback');
+Route::delete('/delete-feedback/{id}',[UserFeedbackController::class,'delete'])->name('delete.feedback');
 
 Route::post('/friendly-match-request/{id}', [MatchesController::class,'create_friendly_match'])->name('friendly.match.request');
 Route::get('/friendly-match-request-accept/{id}', [MatchesController::class,'accept_friendly_match_request'])->name('friendly.match.request.accept');
@@ -105,3 +108,9 @@ Route::get('/otp-resend',[EmailVerificationController::class,'resend_code'])->na
 
 Route::get('/match-prediction/{id}',[MatchPredictionController::class,'index'])->name('match.prediction');
 Route::post('/match-prediction/{id}',[MatchPredictionController::class,'store'])->name('match.prediction');
+
+
+Route::get('/match-score/{match_id}',[HomeController::class ,'show_score'])->name("score");
+
+
+Route::get('admin-profile',[AdminProfileController::class,'index'])->name('admin.profile');

@@ -11,7 +11,7 @@
 
 <div class="container mt-5">
     <h2 class="text-center">Match Prediction</h2>
-    <form action="{{route('match.prediction', $id)}}" method="POST">
+    <form action="{{route('match.prediction', $matches->id)}}" method="POST">
         @csrf
         <div class="form-group">
             <label for="team">Select a Team:</label>

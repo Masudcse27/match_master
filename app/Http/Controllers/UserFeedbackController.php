@@ -14,7 +14,7 @@ class UserFeedbackController extends Controller
     }
 
     private function guardcheck(){
-        $guards = ["web","t_manager","c_manager","g_authority"];
+        $guards = ["web","admin","t_manager","c_manager","g_authority"];
 
         foreach($guards as $guard){
             if(Auth::guard($guard)->check()){
@@ -35,5 +35,20 @@ class UserFeedbackController extends Controller
 
         $feedbacks->save();
         return redirect()->back()->with("success","feedback send successfull");
+    }
+    public function list()  {
+        $feedbacks = UserFeedback::with('user')->orderBy('created_at', 'desc')->get();
+        return view('show-feedback',compact('feedbacks'));
+    }
+    
+    public function delete($id)  {
+        $feedback = UserFeedback::find($id);
+
+        if ($feedback) {
+            $feedback->delete();
+            return redirect()->route('show.feedback')->with("success", "Feedback deleted");
+        }
+
+        return redirect()->route('show.feedback')->with("error", "Feedback not found");
     }
 }

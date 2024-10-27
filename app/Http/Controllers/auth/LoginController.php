@@ -20,6 +20,7 @@ class LoginController extends Controller
                 if(Auth::user()->role == 'admin'){
                     Auth::guard('admin')->attempt($data);
                     Auth::logout();
+                    return redirect()->route('admin.profile')->with('success','login successful');
                 }
                 else if(Auth::user()->role == 'moderator'){
                     Auth::guard('moderator')->attempt($data);

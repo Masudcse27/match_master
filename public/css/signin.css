@@ -1,0 +1,66 @@
+body {
+  /* background-image: url(images/Login.jpg); */
+  background-color: #dae9fc;
+  background-size: cover;
+  background-position: center;
+}
+.container {
+  background: linear-gradient(to top, rgba(48, 134, 254, 0.884),rgba(252, 252, 252, 0.884));
+  margin-top: 100px;
+  margin-bottom: 100px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 400px;
+}
+.userLoginTitle{
+  height: 50px;
+  border-radius: 5px 5px 0 0;
+  color: #3d30f8;
+  font-size: 30px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+input[type="email"],
+input[type="password"] {
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+}
+button[type="submit"] {
+  background-color: rgb(57, 92, 218);
+  color: #fff;
+  border: none;
+  font-size: 20px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+button[type="submit"]:hover {
+  background-color: #0f0391;
+}
+.form-check {
+  margin-bottom: 20px;
+}
+.form-check input {
+  margin-right: 10px;
+}
+.form-check label {
+  font-weight: normal;
+}
+@media screen and (max-width: 576px) {
+  .container {
+    margin-top: 20px;
+  }
+}
