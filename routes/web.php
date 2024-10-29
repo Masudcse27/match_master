@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\auth\RegistrationController;
+use App\Http\Controllers\ClubManagerController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\groun\GroundController;
 use App\Http\Controllers\HomeController;
@@ -45,7 +46,6 @@ Route::group(['prefix'=> 'player'], function () {
 
 Route::get('/team-manager-profile',[TeamManagerProfile::class,'index'])->name('team.manager.profile');
 
-Route::get('/tournament-details/{id}',[TournamentController::class,'details'])->name('tournament.details');
 Route::get('/match-details/{match_id}/{team_id}',[MatchesController::class,'details'])->name('match.details');
 
 
@@ -78,8 +78,11 @@ Route::get('/player-info/{userid}', [PlayerInfoController::class, 'show'])->name
 Route::get('/create-tournament', [TournamentController::class,'index'])->name('tournaments.store');
 Route::post('/create-tournament', [TournamentController::class,'store'])->name('tournaments.store');
 Route::get('/tournaments', [TournamentController::class,'list'])->name('tournaments');
-Route::get('/tournaments-join/{id}', [TournamentController::class,'join'])->name('tournaments.join');
-Route::post('/tournaments-join/{id}', [TournamentController::class,'join_store'])->name('tournaments.join');
+Route::get('/tournaments-join/{id}/{teamId}', [TournamentController::class,'join'])->name('tournaments.join');
+Route::get('tournament-mange/{id}',[TournamentController::class,'manage_tournament'])->name('tournament.manage');
+Route::post('set-date-match/{id}',[TournamentController::class,'set_date'])->name('set.date');
+Route::post('add-team/{id}',[TournamentController::class,'add_team'])->name('add.team');
+Route::get('/tournament-details/{id}/{teamId}',[TournamentController::class,'details'])->name('tournament.details');
 
 Route::get('/create-feature/{tournamentId}', [MatchesController::class, 'createFeature'])->name('create.feature');
 Route::post('/save-matches/{tournamentId}', [MatchesController::class, 'saveMatches'])->name('save.matches');
@@ -114,3 +117,5 @@ Route::get('/match-score/{match_id}',[HomeController::class ,'show_score'])->nam
 
 
 Route::get('admin-profile',[AdminProfileController::class,'index'])->name('admin.profile');
+
+Route::get('club-manager-profile',[ClubManagerController::class,'index'])->name('club.manager.profile');

@@ -32,7 +32,7 @@
         <!-- Manager Details -->
         <div class="row">
             <div class="section-card col-md-6 bg-secondary text-white">
-                <h4 class="section-header">Manager Details</h4>
+                <h4 class="section-header">Admin Details</h4>
                 <p><strong>Name:</strong> {{ $admin->name }}</p>
                 <p><strong>Email:</strong> {{ $admin->email }}</p>
                 <p><strong>Nid:</strong> {{ $admin->nid }}</p>
@@ -41,7 +41,7 @@
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
                 <a class="btn btn-primary mb-3 w-50" href="#">Create new admin</a>
-                <a class="btn btn-primary w-50" href="#">show feedback</a>
+                <a class="btn btn-primary w-50" href="{{route('show.feedback')}}">show feedback</a>
             </div>
         </div>
 

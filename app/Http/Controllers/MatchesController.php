@@ -15,25 +15,28 @@ class MatchesController extends Controller
 
     public function createFeature($tournamentId)
     {
-        $teams = TournamentTeam::where('tournament_id', $tournamentId)->get();
+        $teams = TournamentTeam::with('team')->where('tournaments_id', $tournamentId)->get();
         $teamPairs = $this->generateTeamPairs($teams);
-
-        return view('create_feature', compact('teamPairs', 'tournamentId'));
+        // dd($teams);
+        return view('feature_create', compact('teamPairs', 'tournamentId'));
     }
 
     public function saveMatches(Request $request, $tournamentId)
     {
-        $matches = $request->input('matches');
-
+        $matches = json_decode($request->input('matches'), true);
+        $tournament = Tournament::where('id',$tournamentId)->first();
         foreach ($matches as $match) {
+            $team_1 = Team::where('t_name',$match['team_1'])->first()->id;
+            $team_2 = Team::where('t_name',$match['team_2'])->first()->id;
             Matches::create([
-                'team_1' => $match['team_1'],
-                'team_2' => $match['team_2'],
-                'tournament_id' => $tournamentId,
+                'team_1' => $team_1,
+                'team_2' => $team_1,
+                'Tournament_id' => $tournamentId,
+                'venu_id' => $tournament->venue
             ]);
         }
 
-        return redirect()->route('tournament.show', $tournamentId)->with('success', 'Matches saved successfully.');
+        return redirect()->route('tournament.manage', $tournamentId)->with('success', 'Matches saved successfully.');
     }
 
 
@@ -43,7 +46,7 @@ class MatchesController extends Controller
 
         for ($i = 0; $i < count($teams) - 1; $i++) {
             for ($j = $i + 1; $j < count($teams); $j++) {
-                $pairs[] = ['team_1' => $teams[$i]->id, 'team_2' => $teams[$j]->id];
+                $pairs[] = ['team_1' => $teams[$i]->team->t_name, 'team_2' => $teams[$j]->team->t_name];
             }
         }
 

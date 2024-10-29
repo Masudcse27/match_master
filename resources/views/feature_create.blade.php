@@ -10,7 +10,7 @@
     <ul class="list-group">
         @foreach($teamPairs as $pair)
             <li class="list-group-item">
-                {{ $pair['team_1']->name }} vs {{ $pair['team_2']->name }}
+                {{ $pair['team_1']}} vs {{ $pair['team_2'] }}
             </li>
         @endforeach
     </ul>
@@ -20,7 +20,7 @@
             <input type="hidden" name="matches" value="{{ json_encode($teamPairs) }}">
             <button type="submit" class="btn btn-success">Accept</button>
         </form>
-        <form action="{{ route('create.feature', $tournamentId) }}" method="POST" class="d-inline">
+        <form action="{{ route('create.feature', $tournamentId) }}" method="GET" class="d-inline">
             @csrf
             <button type="submit" class="btn btn-warning">Try Again</button>
         </form>

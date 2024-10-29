@@ -38,26 +38,28 @@
             </div>
             <div class="container mt-2 col-md-6">
                 <div class="container m-3">
-                    <h4>Request For Friendly Match</h4>
-                    <form action="{{route('friendly.match.request',$team->id)}}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label" for="friendly_match">Team Name</label>
-                            <input class="form-control" type="text" id="friendly_match" name="team_name" placeholder="Team_name" class="form-control">
-                        </div>
+                    @if (Auth::guard('t_manager')->check())
+                        <h4>Request For Friendly Match</h4>
+                        <form action="{{route('friendly.match.request',$team->id)}}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label" for="friendly_match">Team Name</label>
+                                <input class="form-control" type="text" id="friendly_match" name="team_name" placeholder="Team_name" class="form-control">
+                            </div>
 
-                        <div class="mb-3">
-                            <label class="form-label" for="match_date">Team Name</label>
-                            <input class="form-control" type="date" id="match_date" name="date" placeholder="Match date" class="form-control">
-                        </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="match_date">Team Name</label>
+                                <input class="form-control" type="date" id="match_date" name="date" placeholder="Match date" class="form-control">
+                            </div>
 
-                        <div class="mb-3">
-                            <label class="form-label" for="match_time">Team Name</label>
-                            <input class="form-control" type="time" id="match_time" name="time" placeholder="Match time" class="form-control">
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">Make Request</button>
-                    </form>
+                            <div class="mb-3">
+                                <label class="form-label" for="match_time">Team Name</label>
+                                <input class="form-control" type="time" id="match_time" name="time" placeholder="Match time" class="form-control">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Make Request</button>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>
@@ -82,7 +84,7 @@
                 </form>
             </div>
             <div class="col-md-6 d-flex align-items-center justify-content-end">
-                <a type="button" href="{{route('player.reagistration',$team->id)}}" class="btn btn-primary">Create New Player</a>
+            @if (Auth::guard('t_manager')->check())<a type="button" href="{{route('player.reagistration',$team->id)}}" class="btn btn-primary">Create New Player</a>@endif
             </div>
         </div>
 
@@ -148,30 +150,56 @@
         </div>
 
         <!-- requested match -->
-        <div class="container mt-5">
-            <!-- <div class="section-card"> -->
-                <h4 class="section-header">Friendly Match Request</h4>
-                @if(count($match_request) > 0)
-                    <div class="row">
-                        @foreach($match_request as $match)
+        @if (Auth::guard('t_manager')->check())
+
+            <div class="container mt-5">
+                <!-- <div class="section-card"> -->
+                    <h4 class="section-header">Upcoming Tournaments</h4>
+                    @if(count($tournaments) > 0)
+                    <div class="row"></div>
+                        @foreach($tournaments as $tournament)
                             <div class="col-md-4">
                                 <div class="card mb-4">
-                                    <div class="card-body">
-                                        <h4>Requested team: {{ $match->teamOne->t_name }}</h4>
-                                        <p class="card-text">Match Date: {{ $match['match_date'] }}</p>
-                                        <p class="card-text">Match time: {{ $match['start_time'] }}</p>
-                                        <a href="{{ route('friendly.match.request.accept', $match->id) }}" class="btn btn-primary">Accept</a>
-                                        <a href="{{ route('friendly.match.request.reject', $match->id) }}" class="btn btn-primary">Reject</a>
+                                    <div class="card-body bg-secondary text-white">
+                                        <h5 class="card-title">{{ $tournament['name'] }}</h5>
+                                        <p class="card-text">Registration last date: {{ $tournament['registration_last_date'] }}</p>
+                                        <p class="card-text">Tournament start: {{ $tournament['start_date'] }}</p>
+                                        <a href="{{ route('tournament.details', ['id' => $tournament['id'], 'teamId'=>$team->id]) }}" class="btn btn-primary">View details</a>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
                     </div>
-                @else
-                    <p>No Request for Friendly Match</p>
-                @endif
-            <!-- </div> -->
-        </div>
+                    @else
+                        <p>No upcoming tournaments.</p>
+                    @endif
+                <!-- </div> -->
+            </div>
+            <div class="container mt-5">
+                <!-- <div class="section-card"> -->
+                    <h4 class="section-header">Friendly Match Request</h4>
+                    @if(count($match_request) > 0)
+                        <div class="row">
+                            @foreach($match_request as $match)
+                                <div class="col-md-4">
+                                    <div class="card mb-4">
+                                        <div class="card-body">
+                                            <h4>Requested team: {{ $match->teamOne->t_name }}</h4>
+                                            <p class="card-text">Match Date: {{ $match['match_date'] }}</p>
+                                            <p class="card-text">Match time: {{ $match['start_time'] }}</p>
+                                            <a href="{{ route('friendly.match.request.accept', $match->id) }}" class="btn btn-primary">Accept</a>
+                                            <a href="{{ route('friendly.match.request.reject', $match->id) }}" class="btn btn-primary">Reject</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p>No Request for Friendly Match</p>
+                    @endif
+                <!-- </div> -->
+            </div>
+        @endif
 
     <!-- </div> -->
 </div>

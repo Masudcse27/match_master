@@ -50,34 +50,60 @@
 
 @section('main_content')
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Today's Matches</h2>
+        <div class="row align-items-center justify-content-center">
+            <!-- Left Logo -->
+            <div class="col-auto">
+                <img src="{{ url('pictures/logos/mainLogo.png') }}" alt="Logo" style="height: 1.5rem;">
+            </div>
 
-        <div class="row justify-content-center">
+            <!-- Welcome Text -->
+            <div class="col-auto">
+                <h1 class="mb-0">Welcome to Match Master</h1>
+            </div>
+
+            <!-- Right Logo -->
+            <div class="col-auto">
+                <img src="{{ url('pictures/logos/mainLogo.png') }}" alt="Logo" style="height: 1.5rem;">
+            </div>
+        </div>
+        <h5 class="text-center mb-4">Today's Matches</h5>
+
+        <div class="container mt-5">
+            <!-- <div class="section-card"> -->
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <h4 class="section-header">upcoming matches</h4>
+                    </div>
+                </div>
+                <div class="row">
             @forelse($todayMatches as $match)
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <a href="{{ route('score',$match->id) }}" class="match-container">
-                        <img src="{{ url('pictures/logos/mainLogo.png') }}" alt="Logo" class="logo">
-                        <div class="card-body">
-                            <h5 class="card-title team-names text-center">
-                                <strong>{{ $match->teamOne->t_name }}</strong> vs <strong>{{ $match->teamTwo->t_name }}</strong>
-                            </h5>
-                            <hr class="bg-light">
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <img src="{{ url('pictures/logos/mainLogo.png') }}" alt="Logo" class="logo">
+                            <div class="card-body">
+                                <h5 class="card-title team-names text-center">
+                                    <strong>{{ $match->teamOne->t_name }}</strong> vs <strong>{{ $match->teamTwo->t_name }}</strong>
+                                </h5>
+                                <hr class="bg-light">
 
-                            <div class="match-status text-center mt-3">
-                                @if($match->is_end)
-                                    <p><strong>Team 1:</strong> {{ $match->team_1_total_run }} / {{ $match->team_1_wickets }} wickets</p>
-                                    <p><strong>Team 2:</strong> {{ $match->team_2_total_run }} / {{ $match->team_2_wickets }} wickets</p>
-                                @else
-                                    <p><strong>Match Date:</strong> {{ $match->match_date}}</p>
-                                    <p><strong>Start Time:</strong> {{ $match->start_time}}</p>
-                                @endif
+                                <div class="match-status text-center mt-3">
+                                    @if($match->team_1_total_run!=0||$match->team_2_total_run!=0)
+                                        <p><strong>{{$match->teamOne->t_name}} </strong> {{ $match->team_1_total_run }} / {{ $match->team_1_wickets }} wickets</p>
+                                        <p><strong>{{$match->teamTwo->t_name}} </strong> {{ $match->team_2_total_run }} / {{ $match->team_2_wickets }} wickets</p>
+                                    @else
+                                        <p><strong>Date: </strong> {{ $match->match_date}}</p>
+                                        <p><strong>Start Time: </strong> {{ $match->start_time}}</p>
+                                    @endif
+                                </div>
+                                <a href="{{ route('score', $match->id) }}" class="btn btn-primary">score</a>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             @empty
                 <p class="text-center text-light">No matches scheduled for today.</p>
             @endforelse
+            </div>
+            <!-- </div> -->
         </div>
-    </div>
 @stop

@@ -49,9 +49,19 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="card-footer text-center">
-                        <a href="{{ route('tournaments.join',$tournament_details->id) }}" class="btn btn-secondary">Back to Tournaments</a>
-                    </div>
+                    @if ($is_join)
+                        <div class="card-footer text-center">
+                            <p class="btn btn-secondary">Already join this Tournament</p>
+                        </div>
+                    @elseif($is_full)
+                        <div class="card-footer text-center">
+                            <p class="btn btn-secondary">Tournament slot is full</p>
+                        </div>
+                    @else
+                        <div class="card-footer text-center">
+                            <a href="{{ route('tournaments.join',['id'=>$tournament_details->id,'teamId'=>$teamId]) }}" class="btn btn-secondary">Join Tournament</a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

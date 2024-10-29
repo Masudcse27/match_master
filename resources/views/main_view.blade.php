@@ -15,12 +15,12 @@
                 <li class="nav-item">
                 <a class="nav-link " aria-current="page" href="#">HOME</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                 <a class="nav-link " href="#">PROBLEMSET</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link " href="#">RANKS</a>
-                </li>
+                </li> -->
 
             </ul>
             <!-- //@if(//Auth::check()) -->

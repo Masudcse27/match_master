@@ -7,6 +7,7 @@ use App\Models\FriendlyMatch;
 use App\Models\Matches;
 use App\Models\Team;
 use App\Models\TeamSquads;
+use App\Models\Tournament;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -86,6 +87,13 @@ class TeamController extends Controller
     }
 
     public function details($team_id){
+        $user_id = null;
+        if(Auth::guard('t_manager')->check()){
+            $user_id = Auth::guard("t_manager")->user()->id;
+        }
+        else{
+            $user_id = Auth::guard("c_manager")->user()->id;
+        }
         $team = Team::find($team_id);
         $squad = TeamSquads::with('user') // Eager load the related player data
         ->where('team_id', $team_id)
@@ -97,7 +105,9 @@ class TeamController extends Controller
 
         $match_request = FriendlyMatch::where('team_2',$team_id)->with('teamOne')->get();
         
-        return view('team-details', compact('team','squad','matches','match_request','team_id'));
+        $tournaments = Tournament::whereDate('registration_last_date', '>=', Carbon::today()->toDateString())
+                  ->where('manager_id', '!=', $user_id)->where('is_club_manager_tournament',false)->get();
+        return view('team-details', compact('team','squad','matches','match_request','team_id','tournaments'));
     }
     /**
      * Remove the specified resource from storage.

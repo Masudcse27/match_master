@@ -134,7 +134,21 @@
                 </tbody>
             </table>
         @endif
-        <a href="{{ route('match.prediction', $match->id) }}" class="btn btn-primary">predict winning team</a>
+        <form action="{{route('match.prediction', $match->id)}}" method="POST">
+        @csrf
+        <div class="form-group">
+            <label for="team">Select a Team:</label>
+            <div>
+                <input type="radio" id="team1" name="team" value="{{$match->team_1}}" required>
+                <label for="team1">{{$match->teamOne->t_name}} : {{$prediction_1}}%</label>
+            </div>
+            <div>
+                <input type="radio" id="team2" name="team" value="{{$match->team_2}}">
+                <label for="team2">{{$match->teamTwo->t_name}} : {{$prediction_2}}%</label>
+            </div>
+        </div>        
+        <button type="submit" class="btn btn-primary">Submit Prediction</button>
+    </form>
     </div>
 </div>
 

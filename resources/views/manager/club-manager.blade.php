@@ -25,12 +25,7 @@
 <body>
 
 <div class="container mt-5">
-    @if(auth::guard('t_manager')->check())
-        <h2 class="text-center dashboard-header">Team Manager Dashboard</h2>
-    @else
-        <h2 class="text-center dashboard-header">Club Manager Dashboard</h2>
-    @endif
-
+    <h2 class="text-center dashboard-header">Club Manager Dashboard</h2>
     <!-- <div class="row"> -->
         <!-- Manager Details -->
         <div class="row">
@@ -78,37 +73,12 @@
             <!-- </div> -->
         </div>
 
-
-        <!-- Upcoming Tournaments -->
-        <div class="container mt-5">
-            <!-- <div class="section-card"> -->
-                <h4 class="section-header">Upcoming Tournaments</h4>
-                @if(count($tournaments) > 0)
-                <div class="row"></div>
-                    @foreach($tournaments as $tournament)
-                        <div class="col-md-4">
-                            <div class="card mb-4">
-                                <div class="card-body bg-secondary text-white">
-                                    <h5 class="card-title">{{ $tournament['name'] }}</h5>
-                                    <p class="card-text">Registration last date: {{ $tournament['registration_last_date'] }}</p>
-                                    <p class="card-text">Tournament start: {{ $tournament['start_date'] }}</p>
-                                    <a href="{{ route('tournament.details', ['id' => $tournament['id']]) }}" class="btn btn-primary">View details</a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-                @else
-                    <p>No upcoming tournaments.</p>
-                @endif
-            <!-- </div> -->
-        </div>
         <!-- My Tournaments -->
         <div class="container mt-5">
             <!-- <div class="section-card"> -->
                 <h4 class="section-header">My Tournaments</h4>
                 @if(count($my_tournaments) > 0)
-                <div class="row"></div>
+                <div class="row">
                     @foreach($my_tournaments as $tournament)
                         <div class="col-md-4 " >
                             <div class="card mb-4">
@@ -116,14 +86,14 @@
                                     <h5 class="card-title">{{ $tournament['name'] }}</h5>
                                     <p class="card-text">Registration last date: {{ $tournament['registration_last_date'] }}</p>
                                     <p class="card-text">Tournament start: {{ $tournament['start_date'] }}</p>
-                                    <a href="{{ route('tournament.details', ['id' => $tournament['id']]) }}" class="btn btn-primary">Manage Tournament</a>
+                                    <a href="{{ route('tournament.manage', ['id' => $tournament['id']]) }}" class="btn btn-primary">Manage Tournament</a>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
                 @else
-                    <p>No upcoming tournaments.</p>
+                    <p>No tournaments found</p>
                 @endif
             <!-- </div> -->
         </div>

@@ -41,7 +41,7 @@ class LoginController extends Controller
                     if(!Auth::guard('c_manager')->user()->is_email_verified){
                         return redirect()->route('otp.verification');
                     }
-                    return redirect()->route('team.manager.profile')->with('success','login successful');
+                    return redirect()->route('club.manager.profile')->with('success','login successful');
                 }
                 else{
                     Auth::guard('g_authority')->attempt($data);
