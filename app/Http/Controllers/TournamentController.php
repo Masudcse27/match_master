@@ -31,7 +31,20 @@ class TournamentController extends Controller
             }
            
         }
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date);
 
+        // Check if any matches are scheduled at the venue within the given date range
+        $isVenueBooked = Matches::where('venu_id', $request->venue)
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('match_date', [$startDate, $endDate]);
+            })
+            ->exists();
+
+        if ($isVenueBooked) {
+            return redirect()->back()->with("error", "The venue is already booked for another match within the selected date range.");
+        }
+        
         $tournament = new Tournament();
         $tournament->name = $request->name;
         $tournament->description = $request->description;

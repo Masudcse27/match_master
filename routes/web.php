@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\auth\RegistrationController;
 use App\Http\Controllers\ClubManagerController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\groun\GroundAuthorityProfileController;
 use App\Http\Controllers\groun\GroundController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MassageController;
@@ -56,8 +57,10 @@ Route::get('/team-registration', [TeamController::class, 'index'])->name('team.r
 Route::post('/team-registration', [TeamController::class, 'create'])->name('team.registration');
 Route::get('/team-details/{id}',[TeamController::class,'details'])->name('team.details');
 
-route::get('/add-ground',[GroundController::class,'index'])->name('add_ground');
-route::post('/add-ground',[GroundController::class,'create'])->name('add_ground');
+Route::get('/ground-authority-profile',[GroundAuthorityProfileController::class,'index'])->name('ground.authority.profile');
+Route::get('/ground-bookings/{id}',[GroundController::class,'index'])->name('ground.bookings');
+Route::get('/add-ground',[GroundController::class,'index'])->name('add_ground');
+Route::post('/add-ground',[GroundController::class,'create'])->name('add_ground');
 Route::get('/show-ground/{id}', [GroundController::class, 'retrive'])->name('show.ground');
 Route::put('/grounds/{id}', [GroundController::class, 'update'])->name('ground.update');
 

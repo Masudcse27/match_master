@@ -46,7 +46,7 @@ class LoginController extends Controller
                 else{
                     Auth::guard('g_authority')->attempt($data);
                     Auth::logout();
-                    return redirect()->route('home')->with('success','login successful');
+                    return redirect()->route('ground.authority.profile')->with('success','login successful');
                 }
             }
             else{
