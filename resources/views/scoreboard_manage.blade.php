@@ -135,12 +135,13 @@
                         <div class="mb-3">
                             <label for="run-type" class="form-label">Run Type:</label>
                             <select id="run-type" name="run_type" class="form-select" required>
-                                <option value="no">No Ball</option>
+                                <option> value="no">No Ball</option>
                                 <option value="lb">Leg Bye</option>
-                                <option value="w">Wide</option>
+                                <option value="w">Wicket</option>
                                 <option value="lbw">LBW</option>
                                 <option value="rw">Run Out</option>
-                                <option value="b">Bye</option>
+                                <option value="wd">Wide</option>
+                                <option value="b">Ball</option>
                             </select>
                         </div>
                         <div class="mb-3">

@@ -181,8 +181,8 @@ class ScoreboardController extends Controller
             ->where('player_id', $facingPlayerId)
             ->first();
         if ($battingHistory) {
-            $battingHistory->run += $run;
-            $battingHistory->ball += 1;
+            $battingHistory->run += $runType =='b'||$runType=='rw'?$run:0;
+            $battingHistory->ball += $runType!='wd'?1:0;
             $battingHistory->save();
         }
         else {
@@ -190,19 +190,19 @@ class ScoreboardController extends Controller
             $history->player_id = $facingPlayerId;
             $history->match_id = $matchId;
             $history->team_id = $batting_team;
-            $history->run = $run;
-            $history->ball = 1;
+            $history->run = $runType =='b'||$runType=='rw'?$run:0;
+            $history->ball = $runType!='wd'?1:0;
             $history->status = 'playing';
             $history->save();
         }
 
         $bowlingHistory = MatchBowlingHistory::where('match_id',$matchId)->where('player_id',$bowlerId)->first();
         if ($bowlingHistory) {
-            $bowlingHistory->run += $run;
-            if (!in_array($runType, ['w', 'no'])) {
+            $bowlingHistory->run += in_array($runType, ['lbw', 'wd','by'])?0:$run;
+            if (!in_array($runType, ['wd', 'no'])) {
                 $bowlingHistory->over += 1;
             }
-            $bowlingHistory->wicket = $runType=='rw'? $bowlingHistory->wicket+1:$bowlingHistory->wicket;
+            $bowlingHistory->wicket = $runType=='rw'||$runType=='lbw'||$runType=='w'? $bowlingHistory->wicket+1:$bowlingHistory->wicket;
             $bowlingHistory->save();
         }
         else {
@@ -210,16 +210,16 @@ class ScoreboardController extends Controller
             $history->player_id = $bowlerId;
             $history->match_id = $matchId;
             $history->team_id = $bowling_team;
-            $history->run = $run;
-            $history->over = in_array($runType, ['w', 'no']) ? 0 : 1;
+            $history->run = in_array($runType, ['lbw', 'wd','by'])?0:$run;
+            $history->over = in_array($runType, ['wd',]) ? 0 : 1;
             $history->is_current = true;
-            $history->wicket = $runType=='rw'? 1:0;
+            $history->wicket = $runType=='rw'||$runType=='lbw'||$runType=='w'? 1:0;
             $history->save();
         }
         $latestBallNumber = Scoreboard::where('match_id', $matchId)
             ->orderBy('created_at', 'desc')
             ->first();;
-        $ballNumber = $latestBallNumber ? in_array($runType, ['w', 'no']) ? $latestBallNumber->ball_number : $latestBallNumber->ball_number+1 : 1;
+        $ballNumber = $latestBallNumber ? in_array($runType, ['wd', 'no']) ? $latestBallNumber->ball_number : $latestBallNumber->ball_number+1 : 1;
         $score = new Scoreboard();
         $score->match_id = $matchId;
         $score->team_id = $batting_team;
@@ -301,5 +301,9 @@ class ScoreboardController extends Controller
     //         \DB::rollBack();
     //         return response()->json(['success' => false, 'message' => 'An error occurred while completing the ball.'], 500);
     //     }
+    }
+
+    public function set_batting_team(){
+        
     }
 }
