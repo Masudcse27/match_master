@@ -58,27 +58,32 @@ class PlayerInfoController extends Controller
     public function update(Request $request)
     {
         $player_id = Auth::user()->id;
-        $player = PlayerInfo::where('player_id',$player_id)->first();
+        $player = PlayerInfo::where('player_id', $player_id)->first();
         $user = User::find($player_id);
-
+    
+        // Validate input data
         $request->validate([
             'name' => 'required|string|max:255',
-            // 'player_type' => 'required|string|max:255',
             'phone_number' => 'required|string|max:15',
             'address' => 'nullable|string|max:255',
         ]);
-
-        $user = new User();
+    
+        // Update user details
         $user->name = $request->name;
         $user->phone_number = $request->phone_number;
-        $player->user->save();
-
-        // $player->player_type = $request->player_type;
+        if (!$user->save()) {
+            return response()->json(['message' => 'Failed to update user details.'], 500);
+        }
+    
+        // Update player info
         $player->address = $request->address;
-        $player->save();
-
-    return response()->json(['message' => 'Player profile updated successfully!']);
+        if (!$player->save()) {
+            return response()->json(['message' => 'Failed to update player information.'], 500);
+        }
+    
+        return response()->json(['message' => 'Player profile updated successfully!']);
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -1,4 +1,19 @@
-@extends('main_view')
+@php
+    if (Auth::guard('admin')->check()) {
+        $layout = 'admin-nav';
+    } elseif (Auth::guard('t_manager')->check()) {
+        $layout = 'team-manager-nav';
+    } elseif (Auth::guard('c_manager')->check()) {
+        $layout = 'club-manager-nav';
+    } elseif (Auth::guard('g_authority')->check()) {
+        $layout = 'ground-authority-nav';
+    } elseif (Auth::check()) {
+        $layout = 'player_nav';
+    } else {
+        $layout = 'main_view';
+    }
+@endphp
+@extends($layout)
 
 @section('css_content')
     <style>
@@ -72,11 +87,11 @@
             <!-- <div class="section-card"> -->
                 <div class="row align-items-center justify-content-between">
                     <div class="col-auto">
-                        <h4 class="section-header">upcoming matches</h4>
+                        <!-- <h4 class="section-header">upcoming matches</h4> -->
                     </div>
                 </div>
                 <div class="row">
-            @forelse($todayMatches as $match)
+                    @forelse($todayMatches as $match)
                     <div class="col-md-4">
                         <div class="card mb-4">
                             <img src="{{ url('pictures/logos/mainLogo.png') }}" alt="Logo" class="logo">

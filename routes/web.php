@@ -41,7 +41,7 @@ Route::get('/',[HomeController::class,'index'])->name('home');
 Route::group(['prefix'=> 'player'], function () {
     Route::group(['middleware'=>'auth'], function () {
         Route::get('/player-profile', [PlayerInfoController::class, 'index'])->name('player.profile');
-        Route::get('/player-profile-update', [PlayerInfoController::class, 'index'])->name('player.profile.update');
+        Route::put('/player-profile-update', [PlayerInfoController::class, 'update'])->name('player.profile.update');
     });
 });
 

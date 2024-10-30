@@ -1,12 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Scoreboard Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-   
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+@extends('admin-nav')
+
+@section('css_content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
+          body {
+            height: 100%;
+            background-color: #213742;
+            color: #fff;
+        }
+
+        #homeMoto {
+            color: #fcca6c;
+            text-align: center;
+            margin-right: 20%;
+        }
+
+        .match-container {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #ffffff; /* Set background color to white */
+            border: none; /* Removes the card border */
+            width: 250px; /* Set a fixed width for a smaller card */
+            position: relative; /* To position the logo */
+            text-decoration: none; /* Removes underline from link */
+            color: #213742; /* Set a contrasting text color for visibility */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+            display: block; /* Make the anchor behave like a block element */
+        }
+
+        .match-container:hover {
+            background-color: #f0f0f0; /* Light gray background on hover */
+            transform: scale(1.05); /* Slightly enlarge the card */
+        }
+
+        .logo {
+            position: absolute;
+            top: 10px; /* Adjust the position as needed */
+            left: 10px; /* Adjust the position as needed */
+            width: 40px; /* Set a fixed width for the logo */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        .team-names, .match-status {
+            font-size: 16px; /* Slightly smaller font size */
+            color: #213742; /* Ensure text color is dark for visibility */
+        }
+        .dashboard-header {
+            margin-top: 30px;
+        }
+        .section-card {
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .section-header {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
         .list-group-item {
             display: flex;
             justify-content: space-between;
@@ -16,98 +70,95 @@
             display: flex;
             gap: 10px;
         }
-    </style>
-</head>
-<body>
-    <div class="container m-5">
         
-        <h2>Scoreboard Management</h2>
-        <h4>{{$match->battingTeam->t_name}} vs {{$match->bowlingTeam->t_name}} </h4>
-        <p>Date: {{ $match->matches->match_date ?? 'N/A' }}</p>
+    </style>
+@stop
+@section('main_content')
+<div class="container mt-5">
+        <div class="card p-4">
+            <h2 class="mb-4 text-center">Scoreboard Management</h2>
+            <h4 class="text-center">{{ $match->battingTeam->t_name }} vs {{ $match->bowlingTeam->t_name }}</h4>
+            <p class="text-center">Date: {{ $match->matches->match_date ?? 'N/A' }}</p>
 
-        <div class="row mt-4">
-           
-            <div class="col-md-4">
-                <h4>Batting Team: {{ $match->battingTeam->t_name }}</h4>
-                <ul class="list-group">
-                    @foreach($battingTeamSquad as $player)
-                        <li class="list-group-item">
-                            <div>
+            <div class="row mt-4">
+                <!-- Batting Team Section -->
+                <div class="col-md-4">
+                    <h4 class="mb-3">Batting Team: {{ $match->battingTeam->t_name }}</h4>
+                    <ul class="list-group">
+                        @foreach($battingTeamSquad as $player)
+                            <li class="list-group-item">
                                 <strong>{{ $player->player->name }}</strong>
-                                <div class="checkbox-group mt-2">
-                                    <div class="form-check">
+                                <div class="checkbox-group">
+                                    <div class="form-check form-check-inline">
                                         <input class="form-check-input playing-checkbox" type="checkbox" data-player-id="{{ $player->player->id }}" @if(in_array($player->player->id, $playingBatters)) checked @endif>
                                         <label class="form-check-label">Playing</label>
                                     </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input out-checkbox" type="checkbox" 
-                                            data-player-id="{{ $player->player->id }}" 
-                                            @if(in_array($player->player->id, $outBatters)) checked @endif>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input out-checkbox" type="checkbox" data-player-id="{{ $player->player->id }}" @if(in_array($player->player->id, $outBatters)) checked @endif>
                                         <label class="form-check-label">Out</label>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
 
-           
-            <div class="col-md-4">
-                <h4>Bowling Team: {{ $match->bowlingTeam->t_name }}</h4>
-                <ul class="list-group">
-                    @foreach($bowlingTeamSquad as $player)
-                        <li class="list-group-item">
-                            <div>
+                <!-- Bowling Team Section -->
+                <div class="col-md-4">
+                    <h4 class="mb-3">Bowling Team: {{ $match->bowlingTeam->t_name }}</h4>
+                    <ul class="list-group">
+                        @foreach($bowlingTeamSquad as $player)
+                            <li class="list-group-item">
                                 <strong>{{ $player->player->name }}</strong>
                                 <div class="form-check mt-2">
                                     <input class="form-check-input bowling-checkbox" type="checkbox" data-player-id="{{ $player->player->id }}" @if($currentBowler && $currentBowler->player_id === $player->player->id) checked @endif>
                                     <label class="form-check-label">Bowling</label>
                                 </div>
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
 
-            
-            <div class="col-md-4">
-                <h4>Update Scoreboard</h4>
-                <form id="scoreboard-form">
-                    <div class="mb-3">
-                        <label for="run" class="form-label">Run:</label>
-                        <select id="run" name="run" class="form-select" required>
-                            @for($i = 0; $i <= 6; $i++)
-                                <option value="{{ $i }}">{{ $i }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="run-type" class="form-label">Run Type:</label>
-                        <select id="run-type" name="run_type" class="form-select" required>
-                            <option value="no">No Ball</option>
-                            <option value="lb">Leg Bye</option>
-                            <option value="w">Wide</option>
-                            <option value="lbw">LBW</option>
-                            <option value="rw">Run Out</option>
-                            <option value="b">Bye</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="facing-batter" class="form-label">Batter Facing the Ball:</label>
-                        <select id="facing-batter" name="facing_player_id" class="form-select" required>
-                            @foreach($battingTeamSquad as $player)
-                                @if(in_array($player->player->id, $playingBatters))
-                                    <option value="{{ $player->player->id }}">{{ $player->player->name }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                    <input type="hidden" id="match-id" value="{{ $match->id }}">
-                    <input type="hidden" id="team-id" value="{{ $match->batting_team_id }}">
-                    <input type="hidden" id="bowler-id" name="bowler_id" value="{{ $currentBowler->player_id ?? '' }}">
-                    <button type="submit" class="btn btn-primary">Complete Ball</button>
-                </form>
+                <!-- Update Scoreboard Section -->
+                <div class="col-md-4">
+                    <h4 class="mb-3">Update Scoreboard</h4>
+                    <form id="scoreboard-form">
+                        @csrf <!-- CSRF token added here -->
+                        <div class="mb-3">
+                            <label for="run" class="form-label">Run:</label>
+                            <select id="run" name="run" class="form-select" required>
+                                @for($i = 0; $i <= 6; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="run-type" class="form-label">Run Type:</label>
+                            <select id="run-type" name="run_type" class="form-select" required>
+                                <option value="no">No Ball</option>
+                                <option value="lb">Leg Bye</option>
+                                <option value="w">Wide</option>
+                                <option value="lbw">LBW</option>
+                                <option value="rw">Run Out</option>
+                                <option value="b">Bye</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="facing-batter" class="form-label">Batter Facing the Ball:</label>
+                            <select id="facing-batter" name="facing_player_id" class="form-select" required>
+                                @foreach($battingTeamSquad as $player)
+                                    @if(in_array($player->player->id, $playingBatters))
+                                        <option value="{{ $player->player->id }}">{{ $player->player->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <input type="hidden" id="match-id" value="{{ $match->id }}">
+                        <input type="hidden" id="team-id" value="{{ $match->batting_team_id }}">
+                        <input type="hidden" id="bowler-id" name="bowler_id" value="{{ $currentBowler->player_id ?? '' }}">
+                        <button type="submit" class="btn btn-primary w-100">Complete Ball</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -301,5 +352,4 @@
             });
         });
     </script>
-</body>
-</html>
+@stop
