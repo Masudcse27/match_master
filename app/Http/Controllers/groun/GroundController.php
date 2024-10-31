@@ -21,7 +21,7 @@ class GroundController extends Controller
       $ground->cost_per_day = $request->cost_per_day;
       $ground->authority_id = Auth::guard('g_authority')->user()->id;
       $ground->save();
-      return redirect()->route('home')->with('success','ground create successful');
+      return redirect()->route('ground.authority.profile')->with('success','ground create successful');
    }
 
    

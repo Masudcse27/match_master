@@ -1,4 +1,4 @@
-@extends('ground-authority-nav')
+@extends('Main_view')
 
 @section('css_content')
     <style>
@@ -83,7 +83,7 @@
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-                <a class="btn btn-primary mb-3 w-50" href="{{ route('team.registration') }}">Create ground</a>
+                <a class="btn btn-primary mb-3 w-50" href="{{ route('add_ground') }}">Create ground</a>
             </div>
         </div>
 
@@ -106,7 +106,7 @@
                                         <h5 class="card-title">{{ $ground->name}}</h5>
                                         <p><b>location: </b>{{$ground->ground_location}}</p>
                                         <p class="card-text">Cost per day: {{$ground->cost_per_day}}</p>
-                                        <a href="{{ route('ground.bookings', $ground->id) }}" class="btn btn-primary">show bookings</a>
+                                        <a href="#" class="btn btn-primary">show bookings</a>
                                     </div>
                                 </div>
                             </div>
