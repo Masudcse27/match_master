@@ -19,9 +19,9 @@ class GroundAuthorityProfileController extends Controller
     }
 
     public function all_booking($id)  {
-        $tournaments = Tournament::where('venue', $id)
+        $bookings = Tournament::where('venue', $id)
             ->where('end_date', '>=', Carbon::today())
             ->get();
-        return view('',compact('bookings'));
+        return view('show-allbooking',compact('bookings'));
     }
 }

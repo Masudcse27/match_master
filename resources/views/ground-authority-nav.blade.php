@@ -1,4 +1,4 @@
-@extends('ground-authority-nav')
+@extends('primaryview')
 @section('primary_css')
   <link rel="stylesheet" href="{{asset('css/nav_bar.css')}}">
   @yield('css_content')
@@ -19,7 +19,7 @@
                 <a class="nav-link " href="{{route('ground.authority.profile')}}">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="{{route('team.registration')}}">Add Ground</a>
+                    <a class="nav-link " href="{{route('add_ground')}}">Add Ground</a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 profile-menu">

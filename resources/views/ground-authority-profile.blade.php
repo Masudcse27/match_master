@@ -1,4 +1,4 @@
-@extends('Main_view')
+@extends('ground-authority-nav')
 
 @section('css_content')
     <style>
