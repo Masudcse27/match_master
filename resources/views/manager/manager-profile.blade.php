@@ -85,6 +85,7 @@
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
                 <a class="btn btn-primary mb-3 w-50" href="{{ route('team.registration') }}">Create Team</a>
                 <a class="btn btn-primary w-50" href="{{route('tournaments.store')}}">Create Tournament</a>
+                <a class="btn btn-primary w-50" href="{{route('all.team')}}">All Teams</a>
             </div>
         </div>
 

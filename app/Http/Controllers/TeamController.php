@@ -117,4 +117,8 @@ class TeamController extends Controller
         $team = Team::find($id);
         $team->delete();
     }
+    public function show_all_team()  {
+        $teams = Team::with('manager')->where('t_manager', '!=', Auth::guard('t_manager')->user()->id)->get();
+        return view('all-team',compact('teams'));
+    }
 }

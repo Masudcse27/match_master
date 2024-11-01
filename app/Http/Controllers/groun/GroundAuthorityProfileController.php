@@ -4,8 +4,10 @@ namespace App\Http\Controllers\groun;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ground;
+use App\Models\Tournament;
 use App\Models\User;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class GroundAuthorityProfileController extends Controller
@@ -14,5 +16,12 @@ class GroundAuthorityProfileController extends Controller
         $authority = User::where("id", Auth::guard('g_authority')->user()->id)->first();
         $grounds = Ground::where('authority_id',Auth::guard('g_authority')->user()->id)->get();
         return view('ground-authority-profile', compact('authority','grounds'));
+    }
+
+    public function all_booking($id)  {
+        $tournaments = Tournament::where('venue', $id)
+            ->where('end_date', '>=', Carbon::today())
+            ->get();
+        return view('',compact('bookings'));
     }
 }

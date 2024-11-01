@@ -18,6 +18,11 @@ class ScoreboardController extends Controller
 
         $match = MatchBattingBowling::with(['battingTeam','bowlingTeam','matches'])->where('match_id',$matchId)->first();
         // dd($match);
+        if (is_null($match)) {
+            $matches = Matches::with(['teamOne', 'teamTwo'])->where('id', $matchId)->first();
+            return view('set-batting-team', compact('matches', 'matchId'))
+                ->with('alert', 'Please set the batting team before viewing the scoreboard.');
+        }
         $battingTeamSquad = MatchSquads::with('player')->where('team_id',$match->batting_team)->where('match_id',$matchId)->get();
         $bowlingTeamSquad = MatchSquads::with('player')->where('team_id',$match->bowling_team)->where('match_id',$matchId)->get();
         $playingBatters = MatchBattingHistory::where('match_id', $matchId)
@@ -303,7 +308,28 @@ class ScoreboardController extends Controller
     //     }
     }
 
-    public function set_batting_team(){
-        
+    public function set_batting_team(Request $request, $matchId){
+        $match = Matches::where('id',$matchId)->first();
+        $set_batting = new MatchBattingBowling();
+        $set_batting->match_id = $matchId;
+        $set_batting->batting_team = $request->team_id;
+        $set_batting->bowling_team = $request->team_id==$match->team_1? $match->team_2:$match->team_1;
+        $set_batting->save();
+        return redirect()->route('scoreboard.show',$matchId);
+    }
+    public function complete_in($matchId){
+        $match = MatchBattingBowling::where('match_id',$matchId)->first();
+        $batting_team = $match->batting_team;
+        $match->batting_team = $match->bowling_team;
+        $match->bowling_team = $batting_team;
+        $match->is_innings_complete = true;
+        $match->save();
+        return redirect()->route('scoreboard.show',$matchId);
+    }
+    public function match_end($matchId){
+        $match = Matches::where('id',$matchId)->first();
+        $match->is_end = true;
+        $match->save();
+        return redirect()->route('admin.profile');
     }
 }

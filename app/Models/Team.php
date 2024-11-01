@@ -16,9 +16,9 @@ class Team extends Model
         "t_manager"
     ];
 
-    public function users()
+    public function manager()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class,'t_manager');
     }
 
 }

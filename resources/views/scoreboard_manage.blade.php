@@ -159,6 +159,12 @@
                         <input type="hidden" id="bowler-id" name="bowler_id" value="{{ $currentBowler->player_id ?? '' }}">
                         <button type="submit" class="btn btn-primary w-100">Complete Ball</button>
                     </form>
+                    @if ($match->is_innings_complete)
+                        <a class="btn btn-primary w-100 mt-3" href="{{route('match.end',$match->match_id)}}">End Match</a>
+                    @else
+                        <a class="btn btn-primary w-100 mt-3" href="{{route('innings.complete',$match->match_id)}}">innings-complete</a>
+                    @endif
+                    
                 </div>
             </div>
         </div>

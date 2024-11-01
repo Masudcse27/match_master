@@ -66,7 +66,7 @@ Route::put('/grounds/{id}', [GroundController::class, 'update'])->name('ground.u
 
 
 Route::get('/messages/{userId}', [MassageController::class, 'index'])->name('messages.index');
-Route::get('/messagesfetch/{userId}', [MassageController::class, 'fetchMessages'])->name('messages.index');
+Route::get('/messages-fetch/{userId}', [MassageController::class, 'fetchMessages'])->name('messages.fetch');
 Route::post('/messages', [MassageController::class, 'store'])->name('messages.store');
 
 
@@ -122,3 +122,11 @@ Route::get('/match-score/{match_id}',[HomeController::class ,'show_score'])->nam
 Route::get('admin-profile',[AdminProfileController::class,'index'])->name('admin.profile');
 
 Route::get('club-manager-profile',[ClubManagerController::class,'index'])->name('club.manager.profile');
+
+Route::get('/all-team',[TeamController::class,'show_all_team'])->name('all.team');
+Route::get('/all-bookings/{id}',[GroundAuthorityProfileController::class,'all_booking'])->name('all.booking');
+
+// Route::get('/match/{matchId}/set-batting-team', [YourController::class, 'showSetBattingTeamForm'])->name('set_batting_team_form');
+Route::post('/match/{matchId}/set-batting-team', [ScoreboardController::class, 'set_batting_team'])->name('set_batting_team');
+Route::get('/innings-complete/{id}',[ScoreboardController::class,'complete_in'])->name('innings.complete');
+Route::get('/match-end/{id}',[ScoreboardController::class,'match_end'])->name('match.end');

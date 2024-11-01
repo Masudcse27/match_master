@@ -42,16 +42,22 @@ class MassageController extends Controller
         return response()->json($messages);
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
+        $request->validate([
+            'message' => 'required|string',
+            'receiver_id' => 'required|integer',
+        ]);
+    
         $user_id = Auth::guard("t_manager")->check()
-                ? Auth::guard("t_manager")->user()->id
-                : Auth::guard("c_manager")->user()->id;
+            ? Auth::guard("t_manager")->user()->id
+            : Auth::guard("c_manager")->user()->id;
+    
         $message = Massage::create([
             'sender_id' => $user_id,
             'receiver_id' => $request->receiver_id,
             'message' => $request->message,
         ]);
-
+    
         return response()->json($message);
     }
 }

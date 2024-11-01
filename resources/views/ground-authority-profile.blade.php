@@ -106,7 +106,7 @@
                                         <h5 class="card-title">{{ $ground->name}}</h5>
                                         <p><b>location: </b>{{$ground->ground_location}}</p>
                                         <p class="card-text">Cost per day: {{$ground->cost_per_day}}</p>
-                                        <a href="#" class="btn btn-primary">show bookings</a>
+                                        <a href="{{route('all.booking',$ground->id)}}" class="btn btn-primary">show bookings</a>
                                     </div>
                                 </div>
                             </div>

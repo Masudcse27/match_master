@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class AdminProfileController extends Controller{
     public function index()  {
-        $matches = Matches::whereDate('match_date', '>=', Carbon::today()->toDateString())->get();
+        $matches = Matches::whereDate('match_date', '>=', Carbon::today()->toDateString())->where('is_end',false)->get();
         $admin  = User::where("id", Auth::guard('admin')->user()->id)->first();
         return view('admin_profile', compact('matches','admin'));
     }

@@ -6,7 +6,7 @@
     } elseif (Auth::guard('c_manager')->check()) {
         $layout = 'club-manager-nav';
     } elseif (Auth::guard('g_authority')->check()) {
-        $layout = 'main_view';
+        $layout = 'ground-authority-nav';
     } elseif (Auth::check()) {
         $layout = 'player_nav';
     } else {
