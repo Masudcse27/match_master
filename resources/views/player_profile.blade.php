@@ -111,6 +111,7 @@
                 <button type="submit" id="saveBtn" class="btn btn-success d-none">Save</button>
             </form>
         </div>
+        <a class="btn btn-primary w-50" href="{{route('change.password')}}">Change password</a>
     </div>
 
     

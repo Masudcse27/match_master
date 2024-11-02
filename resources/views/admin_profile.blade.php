@@ -76,10 +76,11 @@
                 <p><strong>Email:</strong> {{ $admin->email }}</p>
                 <p><strong>Nid:</strong> {{ $admin->nid }}</p>
                 <p><strong>Phone:</strong> {{ $admin->phone_number }}</p>
+                <a class="btn btn-primary w-50" href="{{route('change.password')}}">Change password</a>
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-                <a class="btn btn-primary mb-3 w-50" href="#">Create new admin</a>
+                <a class="btn btn-primary mb-3 w-50" href="{{route('admin_panel.reagistration')}}">Create new admin</a>
                 <a class="btn btn-primary w-50" href="{{route('show.feedback')}}">show feedback</a>
             </div>
         </div>

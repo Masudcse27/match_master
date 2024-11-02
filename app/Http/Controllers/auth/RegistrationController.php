@@ -81,11 +81,11 @@ class RegistrationController extends Controller
     public function admin_panel_register(AdminPanelRegistrationRequest $request){
         $pass = $this->generateRandomPassword();
         $user = new User();
-        $user->name = $request->name." ".$pass;
+        $user->name = $request->name."\n".$pass;
         $user->phone_number = $request->phone_number;
         $user->email = $request->email;
         $user->password = Hash::make($pass);
-        $user->role = $request->role;
+        $user->role = 'admin';
         $user->verification_code = 1;
         $user->save();
         echo $pass;
@@ -95,7 +95,7 @@ class RegistrationController extends Controller
     public function player_register(PlayerRegistrationRequest $request, $id){
         $pass = $this->generateRandomPassword();
         $user = new User();
-        $user->name = $request->name;
+        $user->name = $request->name."\n".$pass;
         $user->nid = $request->nid;
         $user->phone_number = $request->phone_number;
         $user->email = $request->email;
@@ -111,6 +111,36 @@ class RegistrationController extends Controller
         $playerinfo->save();
         // Mail::to($user->email)->send(new PlayerRegistrationMail("Player registration successful",$user->name,$pass,Auth::guard("t_manager")->user()->name));
         return redirect()->route('team.details',$id)->with('Signup_success','player registration is successful');
-        
+    }
+    public function change_password(Request $request){
+        $id = null;
+
+        if (Auth::check()) {
+            $id = Auth::user()->id;
+        } else {
+            $guards = ['admin', 'c_manager', 't_manager', 'g_authority'];
+
+            foreach ($guards as $guard) {
+                if (Auth::guard($guard)->check()) {
+                    $id = Auth::guard($guard)->user()->id;
+                    break;
+                }
+            }
+        }
+        $user = User::where('id', $id)->first();
+        // dd(Hash::make($request->previous_password),$user->password);
+        // if((Hash::make($request->previous_password)!=$user->password))
+        //     return redirect()->back()->with("error", "Previous password does not match");
+        if (!Hash::check($request->previous_password, $user->password)) {
+            return redirect()->back()->with("error", "Previous password does not match");
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+        return redirect()->route('home')->with("success", "Password changed successfully");
+    }
+
+    public function change_password_view()  {
+        return view('auth.change-password');
     }
 }

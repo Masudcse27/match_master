@@ -80,6 +80,7 @@
                 <p><strong>Email:</strong> {{ $authority->email }}</p>
                 <p><strong>Nid:</strong> {{ $authority->nid }}</p>
                 <p><strong>Phone:</strong> {{ $authority->phone_number }}</p>
+                <a class="btn btn-primary w-50" href="{{route('change.password')}}">Change password</a>
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">

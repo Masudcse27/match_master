@@ -116,9 +116,16 @@ class TeamController extends Controller
     {
         $team = Team::find($id);
         $team->delete();
+        if(Auth::guard("t_manager")->check())
+            return redirect()->route('team.manager.profile');
+        else return redirect()->route('club.manager.profile');
     }
     public function show_all_team()  {
-        $teams = Team::with('manager')->where('t_manager', '!=', Auth::guard('t_manager')->user()->id)->get();
+        $teams = Team::with('manager')
+            ->where('t_manager', '!=', Auth::guard('t_manager')->user()->id)
+            ->whereHas('manager', function ($query) {
+            $query->where('role', 't_manager');})
+            ->get();
         return view('all-team',compact('teams'));
     }
 }

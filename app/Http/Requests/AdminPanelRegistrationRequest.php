@@ -29,7 +29,7 @@ class AdminPanelRegistrationRequest extends FormRequest
             'email'             => 'required|email|unique:users',
             'name'              => 'required|string|max:100',
             'phone_number'      => 'required|string|',
-            'role'              => 'required|in:' . implode(',', $role),
+            // 'role'              => 'required|in:' . implode(',', $role),
         ];
     }
 }

@@ -28,9 +28,8 @@ class MassageController extends Controller
         return view('messages.index', compact('messages', 'receiverId'));
     }
     public function fetchMessages($receiverId){
-        $user_id = Auth::guard("t_manager")->check()
-                ? Auth::guard("t_manager")->user()->id
-                : Auth::guard("c_manager")->user()->id;
+        $user_id =Auth::guard("t_manager")->user()->id;
+                
         $messages = Massage::where('sender_id', $user_id)
                 ->where('receiver_id', $receiverId)
                 ->orWhere(function ($query) use ($receiverId, $user_id) {

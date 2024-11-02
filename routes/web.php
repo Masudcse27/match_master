@@ -130,3 +130,8 @@ Route::get('/all-bookings/{id}',[GroundAuthorityProfileController::class,'all_bo
 Route::post('/match/{matchId}/set-batting-team', [ScoreboardController::class, 'set_batting_team'])->name('set_batting_team');
 Route::get('/innings-complete/{id}',[ScoreboardController::class,'complete_in'])->name('innings.complete');
 Route::get('/match-end/{id}',[ScoreboardController::class,'match_end'])->name('match.end');
+
+
+Route::get('/change-password',[RegistrationController::class,'change_password_view'])->name('change.password');
+Route::post('/change-password',[RegistrationController::class,'change_password'])->name('change.password');
+Route::DELETE('/delete-team/{id}',[TeamController::class,'destroy'])->name('delete.team');

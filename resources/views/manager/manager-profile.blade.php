@@ -80,11 +80,12 @@
                 <p><strong>Email:</strong> {{ $manager->email }}</p>
                 <p><strong>Nid:</strong> {{ $manager->nid }}</p>
                 <p><strong>Phone:</strong> {{ $manager->phone_number }}</p>
+                <a class="btn btn-primary w-50" href="{{route('change.password')}}">Change password</a>
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
                 <a class="btn btn-primary mb-3 w-50" href="{{ route('team.registration') }}">Create Team</a>
-                <a class="btn btn-primary w-50" href="{{route('tournaments.store')}}">Create Tournament</a>
+                <a class="btn btn-primary mb-3 w-50" href="{{route('tournaments.store')}}">Create Tournament</a>
                 <a class="btn btn-primary w-50" href="{{route('all.team')}}">All Teams</a>
             </div>
         </div>
@@ -93,31 +94,37 @@
 
         <!-- Team List -->
         <div class="container mt-5">
-            <!-- <div class="section-card"> -->
-                <div class="row align-items-center justify-content-between">
-                    <div class="col-auto">
-                        <h4 class="section-header">Team List</h4>
+    <div class="row align-items-center justify-content-between">
+        <div class="col-auto">
+            <h4 class="section-header">Team List</h4>
+        </div>
+    </div>
+    @if(count($teams) > 0)
+        <div class="row">
+            @foreach($teams as $team)
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body bg-secondary text-white">
+                            <h5 class="card-title">{{ $team['t_name'] }}</h5>
+                            <p class="card-text">Teams title: {{ $team['t_title'] }}</p>
+                            <a href="{{ route('team.details', ['id' => $team['id']]) }}" class="btn btn-primary">View Details</a>
+                            
+                            <!-- Delete Button -->
+                            <form action="{{ route('delete.team', ['id' => $team['id']]) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE') <!-- For delete method -->
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                @if(count($teams) > 0)
-                    <div class="row">
-                        @foreach($teams as $team)
-                            <div class="col-md-4">
-                                <div class="card mb-4">
-                                    <div class="card-body bg-secondary text-white">
-                                        <h5 class="card-title">{{ $team['t_name'] }}</h5>
-                                        <p class="card-text">Teams title: {{ $team['t_title'] }}</p>
-                                        <a href="{{ route('team.details', ['id' => $team['id']]) }}" class="btn btn-primary">View detiles</a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <p>No team found.</p>
-                @endif
-            <!-- </div> -->
+            @endforeach
         </div>
+    @else
+        <p>No team found.</p>
+    @endif
+</div>
+
 
 
         <!-- Upcoming Tournaments -->
