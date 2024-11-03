@@ -135,7 +135,7 @@
                         <div class="mb-3">
                             <label for="run-type" class="form-label">Run Type:</label>
                             <select id="run-type" name="run_type" class="form-select" required>
-                                <option> value="no">No Ball</option>
+                                <option value="no">No Ball</option>
                                 <option value="lb">Leg Bye</option>
                                 <option value="w">Wicket</option>
                                 <option value="lbw">LBW</option>
@@ -154,7 +154,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <input type="hidden" id="match-id" value="{{ $match->id }}">
+                        <input type="hidden" id="match-id" value="{{ $match->match_id }}">
                         <input type="hidden" id="team-id" value="{{ $match->batting_team_id }}">
                         <input type="hidden" id="bowler-id" name="bowler_id" value="{{ $currentBowler->player_id ?? '' }}">
                         <button type="submit" class="btn btn-primary w-100">Complete Ball</button>
@@ -209,7 +209,7 @@
                     
                     var playingCount = $('.playing-checkbox:checked').length;
                     if (playingCount > 2) {
-                        alert('Only two players can be marked as "Playing" at a time.');
+                        alert('Only two players can be marked as "Playing" at a time.'+playingCount);
                         $(this).prop('checked', false);
                         return;
                     }

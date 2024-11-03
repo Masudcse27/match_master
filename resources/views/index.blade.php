@@ -110,7 +110,9 @@
                                         <p><strong>Start Time: </strong> {{ $match->start_time}}</p>
                                     @endif
                                 </div>
-                                <a href="{{ route('score', $match->id) }}" class="btn btn-primary">score</a>
+                                @if($match->team_1_total_run!=0||$match->team_2_total_run!=0)
+                                    <a href="{{ route('score', $match->id) }}" class="btn btn-primary">score</a>
+                                @endif
                             </div>
                         </div>
                     </div>

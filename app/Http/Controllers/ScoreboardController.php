@@ -50,27 +50,33 @@ class ScoreboardController extends Controller
         'match_id' => 'required|exists:matches,id',
     ]);
 
-    if ($validator->fails()) {
-        return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
-    }
+    // if ($validator->fails()) {
+    //     return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+    // }
 
     $playerId = $request->input('playerId');
     $status = $request->input('status');
-    $matchId = $request->input('match_id');
-
+    $matchId = $request->input('match_id'); // Use 'match_id' instead of 'matchId'
+    \Log::info("Received match_id: " . $matchId); 
+    // Fetch the match using match_id
+    $match = Matches::find($matchId);
+    if (!$match) {
+        return response()->json(['success' => false, 'message' => 'Match not found.'.$matchId], 404);
+    }
+    $team = MatchBattingBowling::where('match_id', $matchId)->first()->batting_team;
     // Check if the status is 'playing' and limit to 2 players
     if ($status === 'playing') {
         $currentPlaying = MatchBattingHistory::where('match_id', $matchId)
-            ->where('status', 'playing')
-            ->count();
-
-        if ($currentPlaying >= 2) {
+        ->where('team_id',    $team)
+        ->where('status', 'playing')
+        ->count();
+        if ($currentPlaying > 2) {
             return response()->json(['success' => false, 'message' => 'Only two players can be marked as "Playing" at a time.'], 400);
         }
     }
 
     // Get the team_id from MatchBattingBowling
-    $team = MatchBattingBowling::where('match_id', $matchId)->first()->batting_team;
+    
 
     // Find the player in the match_batting_histories table
     $player = MatchBattingHistory::where('player_id', $playerId)
