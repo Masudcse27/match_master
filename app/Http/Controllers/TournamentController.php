@@ -158,6 +158,14 @@ class TournamentController extends Controller
     
     public function set_date(Request $request,$id)  {
         $match = Matches::where('id',$id)->first();
+        $tournament = Tournament::where('id',$match->Tournament_id)->first();
+        
+        $requestDate = Carbon::parse($request->date);
+        $tournamentStartDate = Carbon::parse($tournament->start_date);
+
+        if ($requestDate->lt($tournamentStartDate)) { // 'lt' means 'less than'
+            return redirect()->back()->with('error', 'The selected date is before the tournament start date.');
+        }
         $date = $request->date;
         $time = $request->time;
         if($date) $match->match_date = $date;

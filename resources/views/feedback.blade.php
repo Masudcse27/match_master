@@ -1,5 +1,19 @@
-
-@extends('admin-nav')
+@php
+    if (Auth::guard('admin')->check()) {
+        $layout = 'admin-nav';
+    } elseif (Auth::guard('t_manager')->check()) {
+        $layout = 'team-manager-nav';
+    } elseif (Auth::guard('c_manager')->check()) {
+        $layout = 'club-manager-nav';
+    } elseif (Auth::guard('g_authority')->check()) {
+        $layout = 'ground-authority-nav';
+    } elseif (Auth::check()) {
+        $layout = 'player_nav';
+    } else {
+        $layout = 'main_view';
+    }
+@endphp
+@extends($layout)
 
 @section('css_content')
     <style>

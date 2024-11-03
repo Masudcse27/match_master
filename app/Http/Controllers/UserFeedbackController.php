@@ -34,7 +34,7 @@ class UserFeedbackController extends Controller
         $feedbacks->feedback = $request->feedback;
 
         $feedbacks->save();
-        return redirect()->back()->with("success","feedback send successfull");
+        return redirect()->route('home')->with("success","feedback send successfull");
     }
     public function list()  {
         $feedbacks = UserFeedback::with('user')->orderBy('created_at', 'desc')->get();
