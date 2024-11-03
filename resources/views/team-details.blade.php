@@ -202,12 +202,22 @@
         @if (Auth::guard('t_manager')->check())
 
             <div class="container mt-5">
-                <!-- <div class="section-card"> -->
-                    <h4 class="section-header">Upcoming Tournaments</h4>
-                    @if(count($tournaments) > 0)
-                    <div class="row"></div>
+                <h4 class="section-header">Upcoming Tournaments</h4>
+                <!-- Search Input -->
+                <div class="mb-3">
+                    <label for="tournament-search" class="form-label">Search Tournament</label>
+                    <div class="input-group" style="width: 300px;"> <!-- Adjust the width here -->
+                        <span class="input-group-text" id="search-icon">
+                            <i class="bi bi-search"></i> <!-- Bootstrap search icon -->
+                        </span>
+                        <input type="text" id="tournament-search" class="form-control" placeholder="Enter tournament name...">
+                    </div>
+                </div>
+
+                @if(count($tournaments) > 0)
+                    <div class="row" id="tournament-list">
                         @foreach($tournaments as $tournament)
-                            <div class="col-md-4">
+                            <div class="col-md-4 tournament-item">
                                 <div class="card mb-4">
                                     <div class="card-body bg-secondary text-white">
                                         <h5 class="card-title">{{ $tournament['name'] }}</h5>
@@ -219,10 +229,9 @@
                             </div>
                         @endforeach
                     </div>
-                    @else
-                        <p>No upcoming tournaments.</p>
-                    @endif
-                <!-- </div> -->
+                @else
+                    <p>No upcoming tournaments.</p>
+                @endif
             </div>
             <div class="container mt-5">
                 <!-- <div class="section-card"> -->
@@ -252,6 +261,22 @@
 
     <!-- </div> -->
 </div>
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // JavaScript for Filtering Tournaments
+    document.getElementById('tournament-search').addEventListener('input', function() {
+        var query = this.value.toLowerCase();
+        var tournamentItems = document.querySelectorAll('.tournament-item');
+
+        tournamentItems.forEach(function(item) {
+            var tournamentName = item.querySelector('.card-title').textContent.toLowerCase();
+            if (tournamentName.includes(query)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+</script>
 @stop

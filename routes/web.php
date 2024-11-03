@@ -68,6 +68,8 @@ Route::put('/grounds/{id}', [GroundController::class, 'update'])->name('ground.u
 Route::get('/messages/{userId}', [MassageController::class, 'index'])->name('messages.index');
 Route::get('/messages-fetch/{userId}', [MassageController::class, 'fetchMessages'])->name('messages.fetch');
 Route::post('/messages', [MassageController::class, 'store'])->name('messages.store');
+Route::get('/managers', [MassageController::class, 'fetchManagersMessages'])->name('messages.fetch.managers');
+
 
 
 

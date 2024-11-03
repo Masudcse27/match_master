@@ -106,43 +106,62 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        $('#send').on('click', function () {
-            var message = $('#message').val().trim();
-            var receiver_id = $('#receiver_id').val();
-            console.log("Send button clicked!");
-
-            // Prevent sending empty messages
-            if (message === '') {
-                alert("Message cannot be empty!");
-                return;
+    $(document).ready(function () {
+    function fetchMessages() {
+        var receiverId = $('#receiver_id').val();
+        $.ajax({
+            url: `/messages-fetch/${receiverId}`, // Updated to match the defined route
+            method: 'GET',
+            success: function (data) {
+                var messageContainer = $('#message-container');
+                messageContainer.empty();
+                data.forEach(function (message) {
+                    var messageClass = message.sender_id == "{{ Auth::guard('t_manager')->user()->id }}" ? 'sent' : 'received';
+                    messageContainer.append('<div class="message ' + messageClass + '">' + message.message + '</div>');
+                });
+                // Scroll to the bottom of the message container
+                messageContainer.scrollTop(messageContainer[0].scrollHeight);
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', status, error);
             }
-
-            $.ajax({
-                url: "{{ route('messages.store') }}",
-                method: 'POST',
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    message: message,
-                    receiver_id: receiver_id
-                },
-                success: function (data) {
-                    // Check if data is returned as expected
-                    if (data && data.message && data.sender_id) {
-                        var messageClass = data.sender_id == "{{ Auth::guard('t_manager')->user()->id }}" ? 'sent' : 'received';
-                        $('#message-container').append('<div class="message ' + messageClass + '">' + data.message + '</div>');
-                        $('#message').val(''); // Clear input field
-                        $('#message-container').scrollTop($('#message-container')[0].scrollHeight);
-                    } else {
-                        console.error('Unexpected response data:', data);
-                        alert("Failed to send message. Please try again.");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('AJAX Error:', status, error);
-                    console.error('Response:', xhr.responseText);
-                    alert("An error occurred while sending the message. Please check the console for more details.");
-                }
-            });
         });
-    </script>
+    }
+
+    $('#send').on('click', function () {
+        var message = $('#message').val().trim();
+        var receiver_id = $('#receiver_id').val();
+
+        // Prevent sending empty messages
+        if (message === '') {
+            alert("Message cannot be empty!");
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('messages.store') }}",
+            method: 'POST',
+            data: {
+                _token: "{{ csrf_token() }}",
+                message: message,
+                receiver_id: receiver_id
+            },
+            success: function (data) {
+                var messageClass = data.sender_id == "{{ Auth::guard('t_manager')->user()->id }}" ? 'sent' : 'received';
+                $('#message-container').append('<div class="message ' + messageClass + '">' + data.message + '</div>');
+                $('#message').val('');
+                $('#message-container').scrollTop($('#message-container')[0].scrollHeight);
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+            }
+        });
+    });
+
+    // Fetch messages every 3 seconds
+    setInterval(fetchMessages, 3000);
+    // Initial fetch of messages
+    fetchMessages();
+});
+</script>
 @stop
