@@ -7,6 +7,7 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\groun\GroundAuthorityProfileController;
 use App\Http\Controllers\groun\GroundController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImageGenerationController;
 use App\Http\Controllers\MassageController;
 use App\Http\Controllers\MatchesController;
 use App\Http\Controllers\MatchPredictionController;
@@ -137,3 +138,9 @@ Route::get('/match-end/{id}',[ScoreboardController::class,'match_end'])->name('m
 Route::get('/change-password',[RegistrationController::class,'change_password_view'])->name('change.password');
 Route::post('/change-password',[RegistrationController::class,'change_password'])->name('change.password');
 Route::DELETE('/delete-team/{id}',[TeamController::class,'destroy'])->name('delete.team');
+
+
+Route::post('/generate-image', [ImageGenerationController::class, 'generate'])->name('generate.image');
+Route::get('/image-generator', function () {
+    return view('generate-image');
+});

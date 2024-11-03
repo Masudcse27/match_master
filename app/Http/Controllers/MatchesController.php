@@ -30,7 +30,7 @@ class MatchesController extends Controller
             $team_2 = Team::where('t_name',$match['team_2'])->first()->id;
             Matches::create([
                 'team_1' => $team_1,
-                'team_2' => $team_1,
+                'team_2' => $team_2,
                 'Tournament_id' => $tournamentId,
                 'venu_id' => $tournament->venue
             ]);
@@ -78,6 +78,9 @@ class MatchesController extends Controller
 
     public function create_friendly_match(Request $request, $team_id) {
         $request_team = Team::where('t_name', $request->team_name)->first();
+        if($request->id == $team_id)
+            return redirect()->back()->with('error', 'can not create match with this time');
+
         $friendly_match = new FriendlyMatch();
         $friendly_match->team_1 = $team_id;
         $friendly_match->team_2 = $request_team->id;

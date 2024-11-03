@@ -24,6 +24,9 @@
                 <li class="nav-item">
                     <a class="nav-link " href="{{route('tournaments.store')}}">Create Tournament</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="{{route('user.feedback')}}">Feedback</a>
+                </li>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 profile-menu">
                 <li><a class="nav-link " href="{{route('logout')}}">Logout</a></li>
