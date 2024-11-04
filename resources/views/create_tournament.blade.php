@@ -133,15 +133,7 @@
                 <button type="submit" class="btn btn-primary w-100">Create Tournament</button>
             </form>
             </div>
-        </div>
-
-        <!-- Image Section -->
-        <div class="col-md-6 p-0 d-none d-md-block">
-            <div class="h-100 w-100" style="background-image: url('http://127.0.0.1:8000/pictures/logos/login_baner.png'); background-size: cover; background-position: center;">
-            </div>
-        </div>
-    </div>
-    <div class="container mt-5">
+            <div class="container mt-5">
         <h1 class="text-center mb-4">Generate a banner with Your Text</h1>
         <form id="imageForm" method="POST" action="{{ route('generate.image') }}">
             @csrf <!-- CSRF token is required for POST requests -->
@@ -161,7 +153,16 @@
             <img id="generatedImage" class="img-fluid" style="display: none;" alt="Generated Image">
         </div>
     </div>
-
+        </div>
+        
+        <!-- Image Section -->
+        <div class="col-md-6 p-0 d-none d-md-block">
+            <div class="h-100 w-100" style="background-image: url('http://127.0.0.1:8000/pictures/logos/login_baner.png'); background-size: cover; background-position: center;">
+            </div>
+        </div>
+    </div>
+    
+</div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $('#imageForm').on('submit', function(event) {
