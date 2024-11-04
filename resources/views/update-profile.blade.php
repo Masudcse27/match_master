@@ -19,16 +19,15 @@
     <style>
         body {
             height: 100%;
-            background-color: #213742;
-            color: #fff;
+            background-color: #f8f9fa;
+            color: #333;
         }
 
         .form-container {
-            background-color: #f8f9fa;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            color: #213742;
         }
 
         .form-label {
@@ -39,28 +38,25 @@
 
 @section('main_content')
 <div class="container mt-5">
-    <h2 class="text-center">Update Team Details</h2>
+    <h2 class="text-center">Update Profile</h2>
 
     <div class="form-container mt-4">
-        <form action="{{ route('team.update', $team->id) }}" method="POST">
+        <form action="{{ route('user.profile.update', $user->id) }}" method="POST">
             @csrf <!-- Include the CSRF token -->
-            
-            <div class="mb-3">
-                <label for="t_name" class="form-label">Team Name</label>
-                <input type="text" name="t_name" id="t_name" class="form-control" value="{{ $team->t_name }}" required>
-            </div>
+            @method('POST') <!-- Use POST for the update operation -->
 
             <div class="mb-3">
-                <label for="t_description" class="form-label">Team Description</label>
-                <input type="text" name="t_description" id="t_description" class="form-control" value="{{ $team->t_description }}" required>
+                <label for="name" class="form-label">Name</label>
+                <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}" required>
             </div>
+
 
             <div class="mb-3">
-                <label for="t_title" class="form-label">Team Title</label>
-                <input type="text" name="t_title" id="t_title" class="form-control" value="{{ $team->t_title }}">
+                <label for="phone_number" class="form-label">Phone Number</label>
+                <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ $user->phone_number }}">
             </div>
 
-            <button type="submit" class="btn btn-primary">Update Team</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
     </div>
 </div>

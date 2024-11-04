@@ -144,3 +144,15 @@ Route::post('/generate-image', [ImageGenerationController::class, 'generate'])->
 Route::get('/image-generator', function () {
     return view('generate-image');
 });
+
+Route::post('/team/update/{id}', [TeamController::class, 'update'])->name('team.update');
+Route::get('/team/update/{id}', [TeamController::class, 'update_from'])->name('team.update');
+
+Route::get('/user/profile/edit/{id}', [RegistrationController::class, 'profile_update_view'])->name('user.profile.edit');
+Route::post('/user/profile/update/{id}', [RegistrationController::class, 'profile_update'])->name('user.profile.update');
+
+Route::get('/ground/edit/{id}', [GroundController::class, 'update_view'])->name('ground.edit');
+Route::post('update/{id}', [GroundController::class, 'update'])->name('ground.update');
+
+Route::get('/tournament/edit/{id}', [TournamentController::class, 'update_view'])->name('tournament.edit');
+Route::post('/tournament/update/{id}', [TournamentController::class, 'update'])->name('tournament.update');

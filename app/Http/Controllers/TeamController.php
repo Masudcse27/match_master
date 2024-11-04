@@ -77,13 +77,22 @@ class TeamController extends Controller
      */
     public function update(Request $request, $id){
         $request->validate([
+            't_name'=> 'required|string|max:250',
             't_description'=> 'required|string|max:250',
             't_title'=> 'string|max:250',
         ]);
         $team = Team::find($id);
-        $team->description = $request->description;
+        $team->t_name = $request->t_name;
+        $team->t_description = $request->t_description;
         $team->t_title = $request->t_title;
         $team->save();
+        return redirect()->back();
+    }
+
+    public function update_from(Request $request, $id){
+        $team = Team::find($id);
+        
+        return view('manager.edit_team_info',compact('team'));
     }
 
     public function details($team_id){
@@ -106,7 +115,7 @@ class TeamController extends Controller
         $match_request = FriendlyMatch::where('team_2',$team_id)->with('teamOne')->get();
         
         $tournaments = Tournament::whereDate('registration_last_date', '>=', Carbon::today()->toDateString())
-                  ->where('manager_id', '!=', $user_id)->where('is_club_manager_tournament',false)->get();
+                  ->where('is_club_manager_tournament',false)->get();
         return view('team-details', compact('team','squad','matches','match_request','team_id','tournaments'));
     }
     /**

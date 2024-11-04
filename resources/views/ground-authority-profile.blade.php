@@ -81,6 +81,7 @@
                 <p><strong>Nid:</strong> {{ $authority->nid }}</p>
                 <p><strong>Phone:</strong> {{ $authority->phone_number }}</p>
                 <a class="btn btn-primary w-50" href="{{route('change.password')}}">Change password</a>
+                <a class="btn btn-primary mt-2 w-50" href="{{route('user.profile.edit',Auth::guard('g_authority')->user()->id)}}">Edit</a>
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
@@ -108,6 +109,7 @@
                                         <p><b>location: </b>{{$ground->ground_location}}</p>
                                         <p class="card-text">Cost per day: {{$ground->cost_per_day}}</p>
                                         <a href="{{route('all.booking',$ground->id)}}" class="btn btn-primary">show bookings</a>
+                                        <a href="{{route('ground.edit',$ground->id)}}" class="btn mt-2 btn-primary">Edit</a>
                                     </div>
                                 </div>
                             </div>

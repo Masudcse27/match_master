@@ -76,6 +76,7 @@
                 <p><strong>Nid:</strong> {{ $manager->nid }}</p>
                 <p><strong>Phone:</strong> {{ $manager->phone_number }}</p>
                 <a class="btn btn-primary w-50" href="{{route('change.password')}}">Change password</a>
+                <a class="btn btn-primary mt-2 w-50" href="{{route('user.profile.edit',Auth::guard('c_manager')->user()->id)}}">Edit</a>
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
@@ -103,6 +104,12 @@
                                         <h5 class="card-title">{{ $team['t_name'] }}</h5>
                                         <p class="card-text">Teams title: {{ $team['t_title'] }}</p>
                                         <a href="{{ route('team.details', ['id' => $team['id']]) }}" class="btn btn-primary">View detiles</a>
+                                        <form action="{{ route('delete.team', ['id' => $team['id']]) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE') <!-- For delete method -->
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                        <a href="{{ route('team.update', ['id' => $team['id']]) }}" class="btn btn-primary">update</a>
                                     </div>
                                 </div>
                             </div>
@@ -128,6 +135,7 @@
                                     <p class="card-text">Registration last date: {{ $tournament['registration_last_date'] }}</p>
                                     <p class="card-text">Tournament start: {{ $tournament['start_date'] }}</p>
                                     <a href="{{ route('tournament.manage', ['id' => $tournament['id']]) }}" class="btn btn-primary">Manage Tournament</a>
+                                    <a href="{{ route('tournament.edit', ['id' => $tournament['id']]) }}" class="btn btn-primary">Edit</a>
                                 </div>
                             </div>
                         </div>

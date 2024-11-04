@@ -143,4 +143,24 @@ class RegistrationController extends Controller
     public function change_password_view()  {
         return view('auth.change-password');
     }
+
+    public function profile_update_view($id) {
+        $user = User::findOrFail($id); // Use findOrFail for better error handling
+        return view('update-profile', compact('user'));
+    }
+    
+    public function profile_update(Request $request, $id) {
+        $request->validate([
+            'name'              => 'required|string|max:100',
+            'phone_number'      => 'required|string|',
+        ]);
+        // dd($id);
+        $user = User::findOrFail($id); // Use findOrFail for better error handling
+        $user->name = $request->name;
+        $user->phone_number = $request->phone_number;
+        
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Profile updated successfully!'); // Optionally add a success message
+    }
 }

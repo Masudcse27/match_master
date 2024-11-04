@@ -24,9 +24,14 @@ class GroundController extends Controller
       return redirect()->route('ground.authority.profile')->with('success','ground create successful');
    }
 
-   
-   public function update(GroundRequest $request, $id){
+   public function update_view($id){
+        $ground =Ground::findOrFail($id);
+        return view('update-ground',compact('ground'));
+   }
+   public function update(Request $request, $id){
+        // dd($id);
         $ground = Ground::find($id);
+        
         if (!$ground) {
             return redirect()->back()->withErrors(['error' => 'Ground not found.']);
         }
@@ -35,11 +40,9 @@ class GroundController extends Controller
         }
         $ground->name = $request->name;
         $ground->description = $request->description;
-        $ground->ground_location = $request->ground_location;
         $ground->cost_per_day = $request->cost_per_day;
         $ground->save();
-
-        return response()->json(['success' => true]);
+        return redirect()->back();
    }
    public function retrive($id){
         $ground = Ground::find($id);

@@ -77,6 +77,7 @@
                 <p><strong>Nid:</strong> {{ $admin->nid }}</p>
                 <p><strong>Phone:</strong> {{ $admin->phone_number }}</p>
                 <a class="btn btn-primary w-50" href="{{route('change.password')}}">Change password</a>
+                <a class="btn btn-primary mt-2 w-50" href="{{route('user.profile.edit',Auth::guard('admin')->user()->id)}}">Edit</a>
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">

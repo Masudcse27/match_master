@@ -114,6 +114,11 @@ class TournamentController extends Controller
 
         return view('tournament-details',compact('tournament_details','teamId','is_join','is_full'));
     }
+
+    public function update_view($id){
+        $tournament = Tournament::findOrFail($id);
+        return view('update-tournament', compact('tournament'));
+    }
     public function update(Request $request, $id){
         $tournament = Tournament::find($id);
         $tournament->name = $request->name;
@@ -122,6 +127,7 @@ class TournamentController extends Controller
         $tournament->start_date = $request->start_date;
         $tournament->end_date = $request->end_date;
         $tournament->save();
+        return redirect()->back();
     }
 
     public function join($id,$teamId){

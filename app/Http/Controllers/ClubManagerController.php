@@ -19,4 +19,5 @@ class ClubManagerController extends Controller
                   ->where('manager_id', $user_id)->get();
         return view('manager.club-manager', compact('teams','manager','my_tournaments' ));
     }
+
 }

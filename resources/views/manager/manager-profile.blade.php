@@ -81,12 +81,14 @@
                 <p><strong>Nid:</strong> {{ $manager->nid }}</p>
                 <p><strong>Phone:</strong> {{ $manager->phone_number }}</p>
                 <a class="btn btn-primary w-50" href="{{route('change.password')}}">Change password</a>
+                <a class="btn btn-primary mt-2 w-50" href="{{route('user.profile.edit',Auth::guard('t_manager')->user()->id)}}">Edit</a>
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
                 <a class="btn btn-primary mb-3 w-50" href="{{ route('team.registration') }}">Create Team</a>
                 <a class="btn btn-primary mb-3 w-50" href="{{route('tournaments.store')}}">Create Tournament</a>
                 <a class="btn btn-primary w-50" href="{{route('all.team')}}">All Teams</a>
+                
             </div>
         </div>
 
@@ -115,6 +117,7 @@
                                 @method('DELETE') <!-- For delete method -->
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
+                            <a href="{{ route('team.update', ['id' => $team['id']]) }}" class="btn btn-primary">update</a>
                         </div>
                     </div>
                 </div>
@@ -143,6 +146,7 @@
                                     <p class="card-text">Registration last date: {{ $tournament['registration_last_date'] }}</p>
                                     <p class="card-text">Tournament start: {{ $tournament['start_date'] }}</p>
                                     <a href="{{ route('tournament.manage', $tournament['id']) }}" class="btn btn-primary">View details</a>
+                                    <a href="{{ route('tournament.edit', $tournament['id']) }}" class="btn btn-primary">Edit</a>
                                 </div>
                             </div>
                         </div>
