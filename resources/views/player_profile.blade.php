@@ -92,7 +92,7 @@
                     <input type="text" id="address" name="address" value="{{ $player->address ?? 'N/A' }}" class="form-control" disabled>
                 </div>
 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label for="total_match" class="form-label">Total Match Played</label>
                     <textarea id="total_match" name="total_match" class="form-control" disabled>{{ $playing_match }}</textarea>
                 </div>
@@ -117,7 +117,7 @@
                 <div class="mb-3">
                     <label for="bowling_average" class="form-label">Bowling Average</label>
                     <textarea id="bowling_average" name="bowling_average" class="form-control" disabled>{{ $total_wicket>0?$total_given_run/$total_wicket:0 }}</textarea>
-                </div>
+                </div> -->
 
                 <button type="button" id="editBtn" class="btn btn-primary">Edit</button>
                 <button type="submit" id="saveBtn" class="btn btn-success d-none">Save</button>
@@ -125,8 +125,49 @@
         </div>
         <a class="btn btn-primary w-50" href="{{route('change.password')}}">Change password</a>
     </div>
+        <div class="container mt-5">
+            <h2 class="mb-4">Batting History</h2>
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Total Match</th>
+                        <th>Total Scored</th>
+                        <th>Total out</th>
+                        <th>Batting Average</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ $playing_match }}</td>
+                        <td>{{ $all_run }}</td>
+                        <td>{{ $total_out }}</td>
+                        <td>{{ $total_out?$all_run/$total_out:$all_run }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    
+        <div class="container mt-5">
+            <h2 class="mb-4">Bowling History</h2>
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Total Match</th>
+                        <th>Run Conceded</th>
+                        <th>Total Wickets</th>
+                        <th>Bowling Average</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ $playing_match }}</td>
+                        <td>{{ $total_given_run }}</td>
+                        <td>{{ $total_wicket }}</td>
+                        <td>{{  $total_wicket>0?$total_given_run/$total_wicket:0 }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
