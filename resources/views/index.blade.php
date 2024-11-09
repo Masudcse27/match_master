@@ -123,4 +123,42 @@
             </div>
             <!-- </div> -->
         </div>
+
+        <h5 class="text-center mb-4">Previous Matches</h5>
+
+<div class="container mt-5">
+    <!-- <div class="section-card"> -->
+        <div class="row align-items-center justify-content-between">
+            <div class="col-auto">
+                <!-- <h4 class="section-header">upcoming matches</h4> -->
+            </div>
+        </div>
+        <div class="row">
+            @forelse($previousMatches as $match)
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="{{ url('pictures/logos/mainLogo.png') }}" alt="Logo" class="logo">
+                    <div class="card-body">
+                        <h5 class="card-title team-names text-center">
+                            <strong>{{ $match->teamOne->t_name }}</strong> vs <strong>{{ $match->teamTwo->t_name }}</strong>
+                        </h5>
+                        <hr class="bg-light">
+
+                        <div class="match-status text-center mt-3">
+                            <p><strong>{{$match->teamOne->t_name}} </strong> {{ $match->team_1_total_run }} / {{ $match->team_1_wickets }} wickets</p>
+                            <p><strong>{{$match->teamTwo->t_name}} </strong> {{ $match->team_2_total_run }} / {{ $match->team_2_wickets }} wickets</p>
+                        </div>
+                        @if($match->team_1_total_run!=0||$match->team_2_total_run!=0)
+                            <a href="{{ route('score', $match->id) }}" class="btn btn-primary">score</a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    @empty
+        <p class="text-center text-light">No matches scheduled for today.</p>
+    @endforelse
+    </div>
+    <!-- </div> -->
+</div>
 @stop

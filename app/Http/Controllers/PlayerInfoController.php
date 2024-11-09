@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MatchBattingHistory;
+use App\Models\MatchBowlingHistory;
+use App\Models\MatchSquads;
 use App\Models\PlayerInfo;
 use App\Models\User;
 use Auth;
@@ -14,8 +17,14 @@ class PlayerInfoController extends Controller
      */
     public function index(){
         $player = PlayerInfo::with('user')->where('player_id', Auth::user()->id)->firstOrFail();
-        // dd($player);
-        return view('player_profile', ['player' => $player]);
+        // dd(Auth::user()->id);
+        $all_run = MatchBattingHistory::where('player_id',Auth::user()->id)->sum('run');
+        $total_ball = MatchBattingHistory::where('player_id',Auth::user()->id)->sum('ball');
+        $total_given_run = MatchBowlingHistory::where('player_id',Auth::user()->id)->sum('run');
+        $total_wicket = MatchBowlingHistory::where('player_id',Auth::user()->id)->sum('wicket');
+        $total_out = MatchBattingHistory::where('player_id',Auth::user()->id)->where('status', 'out')->count();
+        $playing_match = MatchSquads::where('player_id',Auth::user()->id)->count();
+        return view('player_profile', compact('player','all_run','total_ball','total_given_run','total_wicket','total_out','playing_match'));
     }
 
     /**

@@ -94,17 +94,29 @@
 
                 <div class="mb-3">
                     <label for="total_match" class="form-label">Total Match Played</label>
-                    <textarea id="total_match" name="total_match" class="form-control" disabled>{{ $player->total_match }}</textarea>
+                    <textarea id="total_match" name="total_match" class="form-control" disabled>{{ $playing_match }}</textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label for="total_run" class="form-label">Total Runs</label>
-                    <textarea id="total_run" name="total_run" class="form-control" disabled>{{ $player->total_run }}</textarea>
+                    <label for="total_run" class="form-label">Total Scored Runs</label>
+                    <textarea id="total_run" name="total_run" class="form-control" disabled>{{ $all_run }}</textarea>
                 </div>
-
+                <div class="mb-3">
+                    <label for="run_conceded" class="form-label">Total Run Conceded</label>
+                    <textarea id="run_conceded" name="run_conceded" class="form-control" disabled>{{ $total_given_run }}</textarea>
+                </div>
                 <div class="mb-3">
                     <label for="wicket" class="form-label">Total Wickets</label>
-                    <textarea id="wicket" name="wicket" class="form-control" disabled>{{ $player->total_wicket }}</textarea>
+                    <textarea id="wicket" name="wicket" class="form-control" disabled>{{ $total_wicket }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="batting_average" class="form-label">Batting Average</label>
+                    <textarea id="batting_average" name="batting_average" class="form-control" disabled>{{ $total_out?$all_run/$total_out:$all_run }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="bowling_average" class="form-label">Bowling Average</label>
+                    <textarea id="bowling_average" name="bowling_average" class="form-control" disabled>{{ $total_wicket>0?$total_given_run/$total_wicket:0 }}</textarea>
                 </div>
 
                 <button type="button" id="editBtn" class="btn btn-primary">Edit</button>

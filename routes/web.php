@@ -140,10 +140,11 @@ Route::post('/change-password',[RegistrationController::class,'change_password']
 Route::DELETE('/delete-team/{id}',[TeamController::class,'destroy'])->name('delete.team');
 
 
-Route::post('/generate-image', [ImageGenerationController::class, 'generate'])->name('generate.image');
-Route::get('/image-generator', function () {
-    return view('generate-image');
-});
+Route::post('/generate-image', [ImageGenerationController::class, 'generateImage'])->name('generate.image');
+// Route::get('/image-generator', function () {
+//     return view('generate-image');
+// });
+// Route::post('/generate-image', [ImageGenerationController::class, 'generateImage'])->name('generateImage');
 
 Route::post('/team/update/{id}', [TeamController::class, 'update'])->name('team.update');
 Route::get('/team/update/{id}', [TeamController::class, 'update_from'])->name('team.update');

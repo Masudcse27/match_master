@@ -18,8 +18,12 @@ class HomeController extends Controller
             ->whereDate('match_date', Carbon::now()->toDateString()) 
             ->orderBy('start_time')
             ->get();
+        $previousMatches = Matches::with(['teamOne', 'teamTwo'])
+            ->whereDate('is_end', true) 
+            ->orderBy('start_time')
+            ->get();
         // dd($todayMatches);
-        return view("index",compact('todayMatches'));
+        return view("index",compact('todayMatches','previousMatches'));
     }
 
     public function show_score($match_id)  {
