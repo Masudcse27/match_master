@@ -21,7 +21,7 @@
           body {
             height: 100%;
             background-color: #213742;
-            color: #fff;
+            /* color: #fff; */
         }
 
         #homeMoto {

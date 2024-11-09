@@ -19,7 +19,7 @@ class HomeController extends Controller
             ->orderBy('start_time')
             ->get();
         $previousMatches = Matches::with(['teamOne', 'teamTwo'])
-            ->whereDate('is_end', true) 
+            ->where('is_end', true) 
             ->orderBy('start_time')
             ->get();
         // dd($todayMatches);
