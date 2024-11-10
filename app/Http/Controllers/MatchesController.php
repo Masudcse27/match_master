@@ -78,8 +78,8 @@ class MatchesController extends Controller
 
     public function create_friendly_match(Request $request, $team_id) {
         $request_team = Team::where('t_name', $request->team_name)->first();
-        if($request->id == $team_id)
-            return redirect()->back()->with('error', 'can not create match with this time');
+        if($request_team->id == $team_id)
+            return redirect()->back()->with('error', 'can not create match with this team');
 
         $friendly_match = new FriendlyMatch();
         $friendly_match->team_1 = $team_id;
